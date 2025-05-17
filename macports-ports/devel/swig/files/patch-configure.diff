@@ -1,0 +1,14 @@
+--- configure.orig
++++ configure
+@@ -13392,9 +13392,9 @@
+ printf %s "checking for PHP header files... " >&6; }
+             case $PHP in
+         *7.*)
+-          PHPCONFIG=`echo "$PHP"|sed 's/7\...*$/-config&/'` ;;
++          PHPCONFIG=`echo "$PHP"|sed 's/\(7.*\)$/-config\1/'` ;;
+         *8.*)
+-          PHPCONFIG=`echo "$PHP"|sed 's/8\...*$/-config&/'` ;;
++          PHPCONFIG=`echo "$PHP"|sed 's/\(8.*\)$/-config\1/'` ;;
+         *)
+           PHPCONFIG=$PHP-config ;;
+       esac

@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-sqlalchemy
+python.rootname     SQLAlchemy
+version             2.0.31
+revision            0
+categories-append   databases
+license             MIT
+
+python.versions     38 39 310 311 312
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         Python SQL ORM
+
+long_description    SQLAlchemy is the Python SQL toolkit and Object \
+                    Relational Mapper that gives application developers \
+                    the full power and flexibility of SQL.
+
+homepage            http://www.sqlalchemy.org/
+
+checksums           rmd160  c85236031259d5f235243287ee25e75a36d03a77 \
+                    sha256  b607489dd4a54de56984a0c7656247504bd5523d9d0ba799aef59d4add009484 \
+                    size    9524110
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                        path:bin/cython-${python.branch}:py${python.version}-cython
+
+    depends_lib-append  port:py${python.version}-greenlet \
+                        port:py${python.version}-typing_extensions
+
+    post-destroot {
+        # Install example files not installed by the Makefile
+        xinstall -m 755 -d ${destroot}${python.prefix}/share/doc/sqlalchemy/examples
+        foreach f [glob -directory ${worksrcpath}/doc *] {
+            copy $f ${destroot}${python.prefix}/share/doc/sqlalchemy/[file tail $f]
+        }
+        foreach f [glob -directory ${worksrcpath}/examples *] {
+            copy $f ${destroot}${python.prefix}/share/doc/sqlalchemy/examples/[file tail $f]
+        }
+    }
+}

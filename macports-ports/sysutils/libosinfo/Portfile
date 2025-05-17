@@ -1,0 +1,62 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           meson 1.0
+PortGroup           compiler_blacklist_versions 1.0
+
+name                libosinfo
+version             1.11.0
+revision            2
+
+categories          sysutils gnome
+license             LGPL-2.1+
+maintainers         {danchr @danchr} openmaintainer
+
+description         The Operating System information database
+long_description    ${description}
+
+homepage            https://libosinfo.org
+master_sites        https://releases.pagure.org/libosinfo/
+
+checksums           rmd160  8724e3f986326d4177cba136cffe7b06ad409807 \
+                    sha256  1bf96eec9e1460f3d1a713163cca1ff0d480a3490b50899292f14548b3a96b60 \
+                    size    303944
+
+use_xz              yes
+
+depends_lib         path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    path:lib/pkgconfig/gobject-introspection-1.0.pc:gobject-introspection \
+                    path:lib/pkgconfig/icu-uc.pc:icu \
+                    path:lib/pkgconfig/libsoup-2.4.pc:libsoup \
+                    port:libxml2 \
+                    port:libxslt \
+                    port:osinfo-db
+
+depends_build       path:bin/vala:vala \
+                    port:gtk-doc \
+                    port:intltool \
+                    port:pkgconfig \
+                    port:check \
+                    port:wget
+
+depends_run         port:pciids \
+                    port:usbids
+
+# Undefined symbols: "___gcc_personality_v0", "__Unwind_Resume"
+patchfiles-append   patch-unbreak-linking.diff
+
+compiler.blacklist-append *gcc-4.* {clang < 400}
+
+configure.args-append \
+                    -Dwith-pci-ids-path=${prefix}/share/pci.ids \
+                    -Dwith-usb-ids-path=${prefix}/share/usb.ids
+
+if {${universal_possible} && [variant_isset universal]} {
+    foreach arch ${configure.universal_archs} {
+        lappend merger_build_env(${arch}) "CC=${configure.cc} -arch ${arch}"
+        lappend merger_destroot_env(${arch}) "CC=${configure.cc} -arch ${arch}"
+    }
+} else {
+    build.env-append "CC=${configure.cc} ${configure.cc_archflags}"
+    destroot.env-append "CC=${configure.cc} ${configure.cc_archflags}"
+}

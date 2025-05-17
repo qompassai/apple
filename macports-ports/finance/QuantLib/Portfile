@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           compiler_blacklist_versions 1.0
+PortGroup           boost 1.0
+
+github.setup        lballabio QuantLib 1.35 v
+revision            0
+checksums           rmd160  452c8550a698005dd4624e790fbcf966c7be3acd \
+                    sha256  fd83657bbc69d8692065256699b7424d5a606dff03e7136a820b6e9675016c89 \
+                    size    9384439
+
+categories          finance
+maintainers         {ryandesign @ryandesign} openmaintainer
+license             BSD
+
+description         software framework for quantitative finance
+
+long_description    The QuantLib project is aimed at providing a \
+                    comprehensive software framework for quantitative \
+                    finance. QuantLib is a library for modeling, trading, \
+                    and risk management in real-life.
+
+homepage            https://www.quantlib.org
+github.tarball_from releases
+
+compiler.cxx_standard \
+                    2014
+
+# https://github.com/lballabio/QuantLib/issues/1091
+# error: default initialization of an object of const type 'const ext::function<Real (Real)>' (aka 'const function<double (double)>') without a user-provided default constructor
+# https://github.com/lballabio/QuantLib/issues/1883
+# Undefined symbols "std::__1::vector<QuantLib::Handle<QuantLib::Quote>, std::__1::allocator<QuantLib::Handle<QuantLib::Quote> > >::~vector()"
+compiler.blacklist-append {clang < 900}
+
+boost.version       1.81
+boost.depends_type  build
+
+configure.args      --with-boost-include=[boost::include_dir]
+
+github.livecheck.regex {([0-9.]+)}

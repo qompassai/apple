@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        nvm-sh nvm 0.39.7 v
+github.tarball_from archive
+
+categories          devel
+platforms           any
+supported_archs     noarch
+license             MIT
+
+maintainers         {@FranklinYu hotmail.com:franklinyu} openmaintainer
+description         Node version manager
+long_description    NVM is a simple shell script to manage multiple active Node.js versions.
+
+checksums           rmd160  8c17fb960d21d479f5edf4ca1ae4631b0d62de10 \
+                    sha256  dc514465f99541304380f06b602d6e2a8f3f63584f7321d76f39a10c279c5ed7 \
+                    size    329928
+
+use_configure       no
+
+build {}
+
+destroot {
+    set nvm_dir ${destroot}${prefix}/share/nvm
+    xinstall -d ${nvm_dir}
+    xinstall -m 644 ${worksrcpath}/nvm.sh ${filespath}/init-nvm.sh ${nvm_dir}
+    xinstall ${worksrcpath}/nvm-exec ${nvm_dir}
+    reinplace "s|@NVM_SHARE@|${prefix}/share/nvm|g" ${nvm_dir}/init-nvm.sh
+
+    set completions_dir ${destroot}${prefix}/share/bash-completion/completions
+    xinstall -d ${completions_dir}
+    xinstall ${worksrcpath}/bash_completion ${completions_dir}/nvm
+}
+
+notes "Please source the init file in '.bashrc' or '.zshrc':
+
+    source ${prefix}/share/nvm/init-nvm.sh"

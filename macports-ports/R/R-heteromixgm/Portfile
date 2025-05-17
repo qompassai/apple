@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran sjoerd.hermes heteromixgm 2.0.1
+revision            0
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Copula graphical models for heterogeneous mixed data
+long_description    {*}${description}
+checksums           rmd160  121b3444283371cffff12a0962a8b81fab531726 \
+                    sha256  dfb805d460ea09504e3bd52cd1ea94294d0f4845d82f8595ca77ca8590833884 \
+                    size    18953
+supported_archs     noarch
+
+depends_lib-append  port:R-BDgraph \
+                    port:R-glasso \
+                    port:R-igraph \
+                    port:R-tmvtnorm
+
+test.run            yes

@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran scutari bnlearn 5.0
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-2+
+description         Bayesian network structure learning, parameter learning \
+                    and inference
+long_description    {*}${description}
+homepage            https://www.bnlearn.com
+checksums           rmd160  653925c70d75c5ec90b6544855aeb913ef99e417 \
+                    sha256  e786203121980972c33e1e63736cbc218f9aea8f9b37853a6cd3af762c0279a1 \
+                    size    1325740
+
+compilers.setup     require_fortran
+
+compiler.c_standard 2017
+
+depends_test-append port:R-gmp \
+                    port:R-gRain \
+                    port:R-gRbase \
+                    port:R-graph \
+                    port:R-igraph \
+                    port:R-Rgraphviz \
+                    port:R-Rmpfr
+
+test.run            yes

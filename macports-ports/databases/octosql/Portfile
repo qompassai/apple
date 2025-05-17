@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/cube2222/octosql 0.12.2 v
+github.tarball_from archive
+revision            0
+
+description         \
+    OctoSQL is a query tool that allows you to join, analyse and transform \
+    data from multiple databases and file formats using SQL.
+
+long_description    \
+    {*}${description} OctoSQL is a SQL query engine which allows you to write \
+    standard SQL queries on data stored in multiple SQL databases, NoSQL \
+    databases, streaming sources and files in various formats trying to push \
+    down as much of the work as possible to the source databases, not \
+    transferring unnecessary data.  OctoSQL does that by creating an internal \
+    representation of your query and later translating parts of it into the \
+    query languages or APIs of the source databases. Whenever a datasource \
+    doesn't support a given operation, OctoSQL will execute it in memory, so \
+    you don't have to worry about the specifics of the underlying \
+    datasources. OctoSQL supports JSON, CSV, Excel, Parquet, PostgreSQL, \
+    MySQL, Redis & Kafka.
+
+categories          databases textproc
+installs_libs       no
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  2b3b34fd71d8aaf271882c0013f1447e2d71a898 \
+                    sha256  e2bf45a039d1f6bedfd900b656a42ee3986c5a27ddae1a083f2dc52011c3b401 \
+                    size    2224382
+
+go.offline_build no
+
+build.pre_args-append \
+    -ldflags \"-X ${go.package}/cmd.VERSION=${github.tag_prefix}${version}\"
+build.args-append   -o ./bin/${name}
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/bin/${name} ${destroot}${prefix}/bin/
+}

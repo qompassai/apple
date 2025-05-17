@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim: fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+github.setup        miguelgrinberg python-socketio 5.11.2 v
+name                py-socketio
+revision            0
+
+supported_archs     noarch
+platforms           {darwin any}
+license             MIT
+maintainers         {judaew @judaew} openmaintainer
+
+description         Python Socket.IO server and client
+long_description    \
+    Python implementation of the Socket.IO realtime client and server.
+
+checksums           rmd160  d5fa5f6bd0da6ffa0bdbf37af36d63ed3c9678fc \
+                    sha256  d1050d5cc500eb39f3357f53b77640e14ea323c5041730242a506122aabb42c7 \
+                    size    174725
+
+python.versions     38 39 310 311
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-sphinx
+
+    depends_run-append \
+                    port:py${python.version}-aiohttp \
+                    port:py${python.version}-bidict \
+                    port:py${python.version}-engineio \
+                    port:py${python.version}-requests \
+                    port:py${python.version}-websocket-client \
+                    port:py${python.version}-websockets
+
+    post-build {
+        system -W ${worksrcpath}/docs "make PYTHONPATH=${worksrcpath}/build/lib SPHINXBUILD=${prefix}/bin/sphinx-build-${python.branch} html man"
+    }
+
+    post-destroot {
+        set doc_build_dir ${worksrcpath}/docs/_build
+        file delete -force ${doc_build_dir}/html/.buildinfo \
+            ${doc_build_dir}/html/_sources
+        copy ${doc_build_dir}/html ${destroot}${prefix}/share/doc/${subport}
+        copy ${doc_build_dir}/man ${destroot}${python.prefix}
+    }
+}

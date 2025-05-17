@@ -1,0 +1,90 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/docker/cli 26.0.0 v
+revision            0
+name                docker
+categories          devel
+license             Apache-2
+maintainers         {emcrisostomo @emcrisostomo} \
+                    openmaintainer
+description         Utilities for the open-source application container engine
+long_description    Docker is an open source project to pack, ship \
+                    and run any application as a lightweight container. \
+                    This port contains command line utilities for interacting \
+                    with Docker, but not the core daemon.
+
+checksums           rmd160  ea3b48654c566ba72dd83a6c146f83accb43af93 \
+                    sha256  f62f13e71d1080a45717c19560f66f80c36a9b71a8c8868256b8ad7270fc875b \
+                    size    6905684
+
+build.target        github.com/docker/cli/cmd/docker
+
+depends_build-append \
+                    bin:go-md2man:go-md2man
+
+patchfiles          plugin-path.diff
+
+post-patch {
+    reinplace s+__PREFIX__+${prefix}+g \
+        ${worksrcpath}/cli-plugins/manager/manager_unix.go
+}
+
+pre-build {
+    set distfile_dirname [exec tar tzf ${distpath}/[lindex ${distfiles} 0] | sed -n 1p]
+    set docker_gitcommit [string map "${github.author}-${github.project}- {} / {}" ${distfile_dirname}]
+    if {![regexp -nocase -- {^[0-9a-f]{7}$} ${docker_gitcommit}]} {
+        return -code error "can't determine git commit"
+    }
+
+    set val [clock microseconds]
+    set seconds_precision [expr { $val / 1000000 }]
+    set build_time [clock format $seconds_precision -format "%a %b %d %H:%M:%S %Y"]
+
+    build.cmd ${go.bin} build -ldflags \
+        "\"-X github.com/docker/cli/cli/version.GitCommit=${docker_gitcommit} -X github.com/docker/cli/cli/version.Version=${version} -X \\\"github.com/docker/cli/cli/version.BuildTime=${build_time}\\\"\""
+}
+
+destroot {
+    xinstall -m 755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
+
+    foreach src [glob ${worksrcpath}/man/*.?.md] {
+        set page [file rootname [file tail ${src}]]
+        set section [string range [file extension ${page}] 1 end]
+        set dst ${destroot}${prefix}/share/man/man${section}/${page}
+
+        # skip dockerd; it's not provided on macOS
+        if {${page} ne "dockerd.8"} {
+        ui_info "${src} -> ${dst}"
+        xinstall -d [file dirname ${dst}]
+            system -W ${worksrcpath}/man "go-md2man -out ${dst} -in ${src}"
+        }
+    }
+
+    # install completion for various shells
+    set bash_completions_dir ${destroot}${prefix}/share/bash-completion/completions
+    set fish_completions_dir ${destroot}${prefix}/share/fish/vendor_completions.d
+    set zsh_completions_dir ${destroot}${prefix}/share/zsh/site-functions
+    xinstall -d \
+        ${bash_completions_dir} \
+        ${fish_completions_dir} \
+        ${zsh_completions_dir}
+    xinstall -m 644 \
+        [glob ${worksrcpath}/contrib/completion/bash/*] \
+        ${bash_completions_dir}
+    xinstall -m 644 \
+        [glob ${worksrcpath}/contrib/completion/fish/*] \
+        ${fish_completions_dir}
+    xinstall -m 644 \
+        [glob ${worksrcpath}/contrib/completion/zsh/*] \
+        ${zsh_completions_dir}
+}
+
+github.livecheck.regex  {([^"r]+)}
+
+
+notes "\
+    This port only contains a utility for working with Docker; to run\
+    containers locally, install e.g. the colima port."

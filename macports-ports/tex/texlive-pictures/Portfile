@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           texlive 1.0
+
+name                texlive-pictures
+version             70579
+revision            0
+
+categories          tex
+maintainers         {dports @drkp}
+license             Copyleft Permissive
+description         TeX Live: Graphics, pictures, diagrams
+long_description    Including TikZ, pict, etc., but MetaPost and PStricks are separate.
+
+checksums           texlive-pictures-70579-run.tar.xz \
+                    rmd160  a08ffa3c58932a794ab6856bad5322d8db0d710f \
+                    sha256  5e86dd79a40c1dc8c3fd146dd2789db4813c4b3789c2cf8287f8f41b47f0e8e6 \
+                    size    269340520 \
+                    texlive-pictures-70579-doc.tar.xz \
+                    rmd160  d662927320502bb22780a9e22bf7c201acbb93f9 \
+                    sha256  189ba1575db375f527d8dacfc3810132ff3100b1d5daac6376ea9e9d11715252 \
+                    size    249886972 \
+                    texlive-pictures-70579-src.tar.xz \
+                    rmd160  78380330ca54cd677da41ad8a66fce464fef0849 \
+                    sha256  4ed2584df328320f34c1fac5d60796195cf7cde359a329e842403ea523cc5972 \
+                    size    2824724
+
+depends_lib         port:texlive-basic
+
+texlive.maps      \
+    {Map knitfont.map} \
+    {MixedMap xypic.map}
+
+texlive.binaries    cachepic epspdf epspdftk fig4latex getmapdl mathspic memoize-clean.pl memoize-clean.py memoize-extract.pl memoize-extract.py mkpic pn2pdf tikztosvg
+
+
+texlive.texmfport

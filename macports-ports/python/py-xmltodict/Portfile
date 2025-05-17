@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-xmltodict
+version             0.13.0
+revision            0
+
+categories-append   devel
+supported_archs     noarch
+platforms           {darwin any}
+license             MIT
+maintainers         {petr @petrrr} openmaintainer
+
+description         Makes working with XML feel like you are working with JSON
+long_description    This Python module makes working with XML feel like you \
+                    are working with JSON.
+
+homepage            https://github.com/martinblech/xmltodict
+
+checksums           rmd160  de9ca40866dcab09fc15a64e71a6c911e13a5738 \
+                    sha256  341595a488e3e01a85a9d8911d8912fd922ede5fecc4dce437eb4b6c8d037e56 \
+                    size    33813
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    test.run        yes
+
+    post-destroot {
+        set dest_doc ${destroot}${prefix}/share/doc/${subport}
+        xinstall -d ${dest_doc}
+        xinstall -m 0644 -W ${worksrcpath} \
+            README.md LICENSE ${dest_doc}
+    }
+}

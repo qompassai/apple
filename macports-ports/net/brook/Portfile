@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/txthinking/brook 20240606 v
+revision            0
+
+categories          net
+maintainers         {judaew @judaew} openmaintainer
+license             GPL-3
+
+description         A cross-platform proxy/vpn software
+long_description    \
+    Brook is a cross-platform strong encryption and not detectable proxy. \
+    Brook's goal is to keep it simple, stupid and not detectable.
+homepage            https://www.txthinking.com
+
+checksums           ${distname}${extract.suffix} \
+                        rmd160  4fea6dfd79e2bd5a53f9890e7f1bd6046dd012e2 \
+                        sha256  9e074a1afb2aa8c498125841b8d1148cbf04ab385d2f06b23328f0ca03c2f127 \
+                        size    408181
+
+build.args          ./cli/brook
+
+# FIXME: This port currently can't be built without allowing go mod to fetch
+go.offline_build no
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
+}

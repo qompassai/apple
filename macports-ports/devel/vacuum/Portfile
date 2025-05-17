@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/daveshanley/vacuum 0.12.0 v
+go.offline_build    no
+revision            0
+
+homepage            https://quobix.com/vacuum
+
+description         \
+    ${name} is the worlds fastest OpenAPI 3, OpenAPI 2 / Swagger linter and \
+    quality analysis tool.
+
+long_description    \
+    {*}${description} Built in Go, it tears through API specs faster than you \
+    can think. ${name} is compatible with Spectral rulesets and generates \
+    compatible reports.
+
+categories          devel
+installs_libs       no
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  c52b55db2f691127e8cef8300d8da4789109f796 \
+                    sha256  e0cbc0add0ddd64eeb23d3106aa40a1a828bd5f747b783d0666fd920ecd68bfe \
+                    size    2621553
+
+build.pre_args-append \
+    -ldflags \" -X main.version=v${version} \"
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
+}

@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-whatthepatch
+version             1.0.6
+revision            0
+
+categories-append   devel
+platforms           {darwin any}
+supported_archs     noarch
+license             MIT
+maintainers         {reneeotten @reneeotten} openmaintainer
+
+description         A patch parsing and application library.
+long_description    {*}${description}
+
+homepage            https://github.com/cscorley/whatthepatch
+
+checksums           rmd160  f8933515d86c01c2706a6d2c9f8f78e9f089dc8a \
+                    sha256  b274b3294784f78b1e759b35b49b7ef2e8473a580aabf39e5b94a9f901e5de61 \
+                    size    31849
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    test.run        yes
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} README.rst \
+            LICENSE ${destroot}${docdir}
+    }
+}

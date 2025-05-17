@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim: fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-statsmodels
+version             0.14.1
+revision            0
+categories-append   science math
+license             BSD
+
+python.versions     38 39 310 311 312
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         Statistical computations and models for use with SciPy
+
+long_description    Statsmodels is  a  Python  package  that  provides \
+                    a complement to scipy for statistical computations \
+                    including descriptive  statistics  and  estimation \
+                    of statistical models.
+
+homepage            https://www.statsmodels.org/
+
+checksums           md5 4e0f1ecd898349d9f23ee496bb6ba7ba \
+                    rmd160 f117d4bb034d5078e401ebb8a1bed6b65956c53a \
+                    sha256 2260efdc1ef89f39c670a0bd8151b1d0843567781bcafec6cda0534eb47a94f6 \
+                    size   20309647
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                        port:py${python.version}-setuptools_scm \
+                        port:py${python.version}-cython
+    depends_lib-append  port:py${python.version}-numpy \
+                        port:py${python.version}-scipy \
+                        port:py${python.version}-pandas \
+                        port:py${python.version}-patsy \
+                        port:py${python.version}-packaging
+}

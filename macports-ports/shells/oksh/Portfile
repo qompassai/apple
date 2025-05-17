@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        ibara oksh 7.5 oksh-
+revision            0
+checksums           rmd160  6750391f08a224ccbea593edd5209bbbd6d363de \
+                    sha256  40b895c3f8e9311bfe2b230e9b3786712550ef488ced33bfd7cd3f89fceeed5d \
+                    size    308742
+
+github.tarball_from releases
+
+description         A portable OpenBSD Korn Shell
+long_description    A portable OpenBSD Korn Shell based on the Public Domain Korn Shell (pdksh)
+
+categories          shells
+maintainers         {ogsite.net:sirn @sirn} openmaintainer
+license             BSD ISC public-domain
+
+depends_lib         port:ncurses
+
+configure.args      --mandir=${prefix}/share/man

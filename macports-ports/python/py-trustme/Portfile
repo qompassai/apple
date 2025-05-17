@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-trustme
+version             0.7.0
+categories-append   devel
+supported_archs     noarch
+platforms           {darwin any}
+license             {Apache-2 MIT}
+
+python.versions     38 39 310 311 312
+
+maintainers         {@jandemter demter.de:jan} openmaintainer
+
+description         #1 quality TLS certs while you wait, for the discerning tester
+long_description    trustme is a tiny Python package that does one thing: it \
+                    gives you a fake certificate authority (CA) that you can \
+                    use to generate fake TLS certs to use in your tests.
+
+homepage            https://github.com/python-trio/trustme/
+
+checksums           rmd160  5c5f81a35d87a70d43012483bd3948000e67c91f \
+                    sha256  1fde1dd27052ab5e5693e1fbe3ba091a6496daf1125409d73232561145fca369 \
+                    size    27853
+
+if {${name} ne ${subport}} {
+    depends_run-append      port:py${python.version}-cryptography \
+                            port:py${python.version}-idna
+
+    depends_test-append     port:py${python.version}-service_identity \
+                            port:py${python.version}-openssl
+
+    test.run            yes
+}

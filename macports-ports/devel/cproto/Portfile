@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                cproto
+version             4.7v
+revision            0
+categories          devel
+maintainers         nomaintainer
+license             public-domain
+
+description         Generate C prototypes from source code
+
+long_description    ${name} is a program that generates function prototypes \
+                    and variable declarations from C source code. It can \
+                    also convert function definitions between the old style \
+                    and the ANSI C style.
+
+homepage            https://invisible-island.net/cproto/cproto.html
+master_sites        https://invisible-island.net/archives/${name}/ \
+                    https://invisible-mirror.net/archives/${name}/
+
+extract.suffix      .tgz
+
+checksums           rmd160  54d2890dd0e97d175439b2f801e32636f9fc16f9 \
+                    sha256  f3dec3f6102770196976459c4b44ac27355f6120da76e5231ec1323e379d1511 \
+                    size    193874
+
+depends_lib         port:flex
+depends_build       port:bison
+
+configure.args      --mandir=${prefix}/share/man
+
+livecheck.regex     cproto-(\\d+(?:\\.\\d+)*\[a-z\]?)

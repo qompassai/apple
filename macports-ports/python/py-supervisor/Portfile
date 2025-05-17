@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-supervisor
+version             4.2.5
+revision            0
+
+supported_archs     noarch
+platforms           {darwin any}
+license             BSD ZPL-2.1
+maintainers         nomaintainer
+
+description         Process manager for UNIX-like OSs
+long_description    The supervisor is a client/server system that allows its users to control \
+                    a number of processes on UNIX-like operating systems
+
+homepage            https://www.supervisord.org/
+
+checksums           rmd160  a700be22e09f9afba56c66161d9a46d665f77f83 \
+                    sha256  34761bae1a23c58192281a5115fb07fbf22c9b0133c08166beffc70fed3ebc12 \
+                    size    466073
+
+python.versions     312
+
+if {${name} ne ${subport}} {
+    depends_lib-append \
+                    port:py${python.version}-setuptools
+
+    # 6 tests fail currently, mostly because of "error: AF_UNIX path too long", which can be ignored
+    test.run        yes
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} CHANGES.rst COPYRIGHT.txt \
+            LICENSES.txt README.rst supervisor/skel/sample.conf \
+            docs/plugins.rst ${destroot}${docdir}
+    }
+}

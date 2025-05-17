@@ -1,0 +1,59 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/kubernetes-sigs/krew 0.4.4 v
+go.package          sigs.k8s.io/krew
+github.tarball_from archive
+revision            0
+
+description         Find and install kubectl plugins
+
+long_description    Krew is the package manager for kubectl plugins. Krew \
+                    helps you discover plugins, install and manage them on \
+                    your machine. It is similar to tools like apt, dnf or \
+                    brew. Today, over 70 kubectl plugins are available on Krew.
+
+categories          sysutils
+installs_libs       no
+license             Apache-2
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  85c44a4c7dbbc740b5ebc4f4d5e84b7b82a264bf \
+                    sha256  dd11ef2d56a0897d38ac219f17332effbd09a3c6a1f68974635b925ba129cd35 \
+                    size    557921
+
+depends_build-append \
+                    port:gox
+
+# Allow Go to fetch dependencies at build time
+go.offline_build no
+
+build.env-append    OSARCH=${goos}/${goarch}
+
+build.cmd           ./hack/make-binaries.sh
+build.target
+
+patch {
+    reinplace "s|^git_tag=.*|git_tag=${version}|"   ${build.cmd}
+    reinplace {s|^git_rev=.*|git_rev=""|}           ${build.cmd}
+}
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/out/bin/${name}-${goos}_${goarch} \
+        ${destroot}${prefix}/bin/${name}
+
+    set krew_doc_dir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${krew_doc_dir}
+    copy {*}[glob ${worksrcpath}/docs/*] ${destroot}${krew_doc_dir}/
+}
+
+notes "
+To initialize ${name} as a kubectl plugin, run:
+
+    ${name} install krew
+
+Then add the \$HOME/.krew/bin directory to your PATH environment variable.
+"

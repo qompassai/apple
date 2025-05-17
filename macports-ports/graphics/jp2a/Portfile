@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# _fmemopen
+legacysupport.newest_darwin_requires_legacy 16
+
+epoch               1
+github.setup        Talinx jp2a 1.2.0 v
+revision            0
+checksums           rmd160  d7eb41447bebbc94939d15ab11ab344946a62088 \
+                    sha256  a19088bb4ba27e8a5524f26f0f1622529ca087e36f5a060c6535c11b266106d1 \
+                    size    534247
+github.tarball_from archive
+
+categories          graphics
+license             GPL-2
+maintainers         nomaintainer
+
+description         converts JPEG images to ASCII
+long_description    The jp2a program will read JPEG images and print them \
+                    in ASCII characters. Options let you control the output \
+                    size. You know you want it.
+
+use_autoreconf      yes
+
+depends_build-append \
+                    port:autoconf-archive \
+                    port:pkgconfig
+
+depends_lib-append  port:curl \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libpng \
+                    port:ncurses
+
+configure.args-append \
+                    --enable-curl
+
+# FIXME: two tests fail on PowerPC:
+# https://github.com/Talinx/jp2a/issues/15
+test.run            yes
+test.target         check

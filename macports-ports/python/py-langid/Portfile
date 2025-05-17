@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-langid
+python.rootname     py3langid
+version             0.2.2
+revision            0
+
+categories-append   textproc
+supported_archs     noarch
+platforms           {darwin any}
+license             BSD
+maintainers         nomaintainer
+
+description         Stand-alone language identification system
+long_description    {*}${description}
+
+homepage            https://github.com/adbar/py3langid
+
+checksums           rmd160  499767c2edaeb841716421693b97c241a85052ee \
+                    sha256  b4de01dad7e701f29d216a0935e85e096cc8675903d23ea8445b2bb5f090b96f \
+                    size    749464
+
+python.versions     312
+
+if {${name} ne ${subport}} {
+    depends_lib-append \
+                    port:py${python.version}-numpy
+}

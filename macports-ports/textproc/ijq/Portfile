@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           sourcehut 1.0
+
+sourcehut.setup     gpanders ijq 1.1.1 v
+revision            0
+
+description         Interactive jq tool. Like jqplay for the commandline.
+
+long_description    {*}${description}
+
+categories          textproc devel sysutils
+installs_libs       no
+license             GPL-3
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+depends_build-append \
+                    port:go \
+                    port:scdoc
+
+build.cmd           make
+build.target        all
+
+depends_run         port:jq
+
+checksums           rmd160  94dfeff25e65e99b8bb439ff8536aecdf16464da \
+                    sha256  04d2de1be4da46923e6920cd2f102113b267b1cd2e5c09e9145f837d87780828 \
+                    size    3332079
+
+use_configure       no
+
+destroot {
+    system -W ${worksrcpath} \
+        "make DESTDIR=${destroot} prefix=${prefix} install"
+}

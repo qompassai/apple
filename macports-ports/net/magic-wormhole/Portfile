@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                magic-wormhole
+version             0.15.0
+revision            0
+
+homepage            https://magic-wormhole.readthedocs.io
+
+description         Securely transfer data between computers.
+
+long_description    {*}${description} This package provides a library and a \
+                    command-line tool named wormhole, which makes it possible \
+                    to get arbitrary-sized files and directories (or short \
+                    pieces of text) from one computer to another. The two \
+                    endpoints are identified by using identical \
+                    “wormhole codes”: in general, the sending machine \
+                    generates and displays the code, which must then be typed \
+                    into the receiving machine.
+
+categories          net python sysutils
+platforms           {darwin any}
+supported_archs     noarch
+license             MIT
+
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  c3443ae6be5eef95336b374fc387d8c1cb0a36f6 \
+                    sha256  be2563b5c5547ba333bc6608f048004c8f36d556139bf2ffe3d9f41da2797006 \
+                    size    283096
+
+python.default_version  311
+
+depends_build-append port:py${python.version}-setuptools
+
+depends_lib-append  port:libsodium                      \
+                    port:py${python.version}-attrs      \
+                    port:py${python.version}-autobahn   \
+                    port:py${python.version}-automat    \
+                    port:py${python.version}-click      \
+                    port:py${python.version}-hkdf       \
+                    port:py${python.version}-humanize   \
+                    port:py${python.version}-pynacl     \
+                    port:py${python.version}-six        \
+                    port:py${python.version}-spake2     \
+                    port:py${python.version}-tqdm       \
+                    port:py${python.version}-txtorcon   \
+                    port:py${python.version}-twisted

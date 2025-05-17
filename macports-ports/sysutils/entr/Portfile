@@ -1,0 +1,37 @@
+# -*- coding:utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github          1.0
+PortGroup           legacysupport   1.1
+PortGroup           makefile        1.0
+
+# O_CLOEXEC
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        eradman entr 5.6
+github.tarball_from archive
+revision            0
+
+homepage            https://eradman.com/entrproject
+
+description         a utility for running arbitrary commands when files change.
+
+long_description    {*}${description} Uses kqueue(2) to avoid polling. entr \
+                    responds to file system events by executing command line \
+                    arguments.
+
+categories          sysutils
+installs_libs       no
+license             ISC
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  3ed7e941bbad94ea4baf50f02bd3acd077267436 \
+                    sha256  0222b8df928d3b5a3b5194d63e7de098533e04190d9d9a154b926c6c1f9dd14e \
+                    size    23370
+
+test.run            yes
+
+build.pre_args-append    -f Makefile.macos
+destroot.pre_args-append -f Makefile.macos
+test.pre_args-append     -f Makefile.macos

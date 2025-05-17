@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           texlive 1.0
+
+name                texlive-xetex
+version             70315
+revision            0
+
+categories          tex
+maintainers         {dports @drkp}
+license             Copyleft Permissive
+description         TeX Live: XeTeX and packages
+long_description    Packages for XeTeX, the Unicode/OpenType-enabled TeX by Jonathan Kew, http://tug.org/xetex.
+
+checksums           texlive-xetex-70315-run.tar.xz \
+                    rmd160  fa0ee5e05f017ec99d8eac9e52a8b204909224b3 \
+                    sha256  e3c467b89709024450bfe719e5b9fb597c528ba2263e732a2553fb9b9bdb02cc \
+                    size    11293052 \
+                    texlive-xetex-70315-doc.tar.xz \
+                    rmd160  84057c5f732f2b33eacadd4528fc0ce8c224eba5 \
+                    sha256  605aadf0d8d1dcc445a23adbf99bc1650c9d419ce241261db22a7c1c0b5c3d1e \
+                    size    10595404 \
+                    texlive-xetex-70315-src.tar.xz \
+                    rmd160  114fefc69910c27d5a147c36bfd1c7fae6308d34 \
+                    sha256  5df093e4efa6321d377a133a77983073f09d7de9517ad46d5beabb2d7f3d3ac5 \
+                    size    53052
+
+depends_lib         port:texlive-basic
+
+texlive.formats      \
+    {1 xelatex-dev xetex language.dat {-etex xelatex.ini}} \
+    {1 xelatex xetex language.dat {-etex xelatex.ini}} \
+    {1 xetex xetex language.def {-etex xetex.ini}}
+
+texlive.binaries    teckit_compile xelatex xelatex-dev xelatex-unsafe xetex xetex-unsafe
+
+texlive.exclude     tlpkg/tlpostcode/xetex.pl
+
+depends_lib-append  port:texlive-latex-recommended \
+                    port:texlive-plain-generic
+
+texlive.texmfport

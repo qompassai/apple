@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           texlive 1.0
+
+name                texlive-formats-extra
+version             70274
+revision            0
+
+categories          tex
+maintainers         {dports @drkp}
+license             Copyleft Permissive
+description         TeX Live: Additional formats
+long_description    Collected TeX `formats', i.e., large-scale macro packages designed to be dumped into .fmt files -- excluding the most common ones, such as latex and context, which have their own package(s). It also includes the Aleph engine and related Omega formats and packages, and the HiTeX engine and related.
+
+checksums           texlive-formats-extra-70274-run.tar.xz \
+                    rmd160  512e0ad869e132f9376cf2153d83d7f8d5bc27d3 \
+                    sha256  99b1780025a7fbe04a3d96e2395dc9f498a107166fbf18c3c468fb4a0d5353a1 \
+                    size    7621604 \
+                    texlive-formats-extra-70274-doc.tar.xz \
+                    rmd160  ace2c8228492090d71b1c52effd5bfc589d6faf2 \
+                    sha256  f23895867faf47913d322f65f05b9535edd4653b65df17592acface0f25b0610 \
+                    size    5641420 \
+                    texlive-formats-extra-70274-src.tar.xz \
+                    rmd160  97ed8e1b5d01a24ee971909364ef585f121ba57b \
+                    sha256  3c61fbe09b4b2b9ccd45d00db1dd1e7712df130ff6e52da6a954f7f96e2b5630 \
+                    size    370496
+
+depends_lib         port:texlive-basic port:texlive-latex
+
+texlive.formats      \
+    {1 aleph aleph - {*aleph.ini}} \
+    {1 eplain pdftex language.dat {-translate-file=cp227.tcx *eplain.ini}} \
+    {1 hilatex hitex language.dat {-etex -ltx hilatex.ini}} \
+    {1 hitex hitex language.def {-etex -ltx hitex.ini}} \
+    {1 jadetex pdftex language.dat {*jadetex.ini}} \
+    {1 pdfjadetex pdftex language.dat {*pdfjadetex.ini}} \
+    {1 lollipop tex - {lollipop.ini}} \
+    {1 mllatex pdftex language.dat {-translate-file=cp227.tcx -mltex *mllatex.ini}} \
+    {1 mltex pdftex - {-translate-file=cp227.tcx -mltex mltex.ini}} \
+    {1 texsis pdftex - {-translate-file=cp227.tcx texsis.ini}} \
+    {1 pdfxmltex pdftex language.dat {*pdfxmltex.ini}} \
+    {1 xmltex pdftex language.dat {*xmltex.ini}}
+
+texlive.maps      \
+    {Map mxedruli.map} \
+    {Map omega.map}
+
+texlive.binaries    aleph eplain hilatex hishrink histretch hitex jadetex lollipop mllatex mltex odvicopy odvitype ofm2opl omfonts opl2ofm otangle otp2ocp outocp ovf2ovp ovp2ovf pdfjadetex pdfxmltex texsis wofm2opl wopl2ofm wovf2ovp xmltex
+
+
+texlive.texmfport

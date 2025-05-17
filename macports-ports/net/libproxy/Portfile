@@ -1,0 +1,111 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           cmake 1.1
+
+epoch               1
+github.setup        libproxy libproxy 0.4.18
+revision            2
+categories          net
+maintainers         {devans @dbevans} openmaintainer
+license             LGPL-2.1+
+homepage            https://libproxy.github.io/libproxy
+
+description         A library that provides automatic proxy configuration management.
+
+long_description    Libproxy exists to answer the question: Given \
+                    a network resource, how do I reach it? It handles all \
+                    the details, enabling you to get back to programming.
+
+checksums           rmd160  18680c62196d6b1765864ac8d8cfb0da19e96fb3 \
+                    sha256  712f5965b57dc329fd5700f906d9943dbdc379e547e31dc8b11c77332a652d52 \
+                    size    98063
+
+patchfiles-append   patch-bindings-perl-src-CMakeLists.txt.diff \
+                    patch-libproxy-cmake.diff \
+                    patch-libproxy-test-CMakeLists.txt.diff
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  path:bin/vala:vala \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2
+
+# https://trac.macports.org/ticket/63267
+compiler.cxx_standard 2011
+
+# webkit and mozjs pacrunners disabled by default
+# due to the following issues:
+#
+# webkit pacrunner circular dependency problem
+# webkit-gtk -> libsoup -> libproxy -> webkit-gtk (#26261)
+#
+# pac files support not available on Tiger (#24127)
+#
+# TODO: add variants that safely enable these features
+
+use_parallel_build no
+
+# use default GNOME build which targets GNOME3 (gsettings) instead of GNOME2 (gconf)
+# perl bindings disabled due to unpredictable configuration
+# kde binding (KDE4/KF5) tests at runtime for kreadconfig5 kreadconfig in that order
+
+configure.args-append \
+                    -DMP_MACOSX=NO \
+                    -DWITH_WEBKIT=NO \
+                    -DWITH_WEBKIT3=NO \
+                    -DWITH_VALA=YES \
+                    -DWITH_PERL=NO \
+                    -DWITH_PYTHON2=NO \
+                    -DWITH_PYTHON3=YES \
+                    -DWITH_KDE=YES
+
+# Fix an issue with clang-900 (Xcode 9) using the Sierra SDK, <rdar://problem/31263056>
+configure.cppflags-append -D_DARWIN_C_SOURCE=1
+
+# Set standard via cxx flags, as cmake.set_cxx_standard is not working properly
+configure.cxxflags-append -std=c++11
+
+variant python39 conflicts python310 python311 python312 description {Build Bindings for Python 3.9} {
+    set python_prefix ${frameworks_dir}/Python.framework/Versions/3.9
+    depends_lib-append port:python39
+    configure.args-append \
+                    -DPYTHON3_EXECUTABLE=${prefix}/bin/python3.9 \
+                    -DPYTHON3_SITEPKG_DIR=${python_prefix}/lib/python3.9/site-packages
+}
+
+variant python310 conflicts python39 python311 python312 description {Build Bindings for Python 3.10} {
+    set python_prefix ${frameworks_dir}/Python.framework/Versions/3.10
+    depends_lib-append port:python310
+    configure.args-append \
+                    -DPYTHON3_EXECUTABLE=${prefix}/bin/python3.10 \
+                    -DPYTHON3_SITEPKG_DIR=${python_prefix}/lib/python3.10/site-packages
+}
+
+variant python311 conflicts python39 python310 python312 description {Build Bindings for Python 3.11} {
+    set python_prefix ${frameworks_dir}/Python.framework/Versions/3.11
+    depends_lib-append port:python311
+    configure.args-append \
+                    -DPYTHON3_EXECUTABLE=${prefix}/bin/python3.11 \
+                    -DPYTHON3_SITEPKG_DIR=${python_prefix}/lib/python3.11/site-packages
+}
+
+variant python312 conflicts python39 python310 python311 description {Build Bindings for Python 3.12} {
+    set python_prefix ${frameworks_dir}/Python.framework/Versions/3.12
+    depends_lib-append port:python312
+    configure.args-append \
+                    -DPYTHON3_EXECUTABLE=${prefix}/bin/python3.12 \
+                    -DPYTHON3_SITEPKG_DIR=${python_prefix}/lib/python3.12/site-packages
+}
+
+if {![variant_isset python39] && ![variant_isset python310] && ![variant_isset python311]} {
+    default_variants    +python312
+}
+
+post-patch {
+    if {${os.major} < 13 && [string match "*clang*" ${configure.compiler}]} {
+        # <rdar://problem/12941376>
+        reinplace "s:-D_POSIX_C_SOURCE=200112L:-D_POSIX_C_SOURCE=200112L -D_DARWIN_C_SOURCE=1:" ${worksrcpath}/libproxy/CMakeLists.txt
+    }
+}

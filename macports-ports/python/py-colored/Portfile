@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-colored
+version             2.2.4
+license             MIT
+platforms           {darwin any}
+supported_archs     noarch
+maintainers         nomaintainer
+
+description         Simple library for color and formatting to terminal
+long_description    {*}${description}
+
+homepage            https://gitlab.com/dslackw/colored
+
+checksums           rmd160  b1023c22767207b25d653f4126b7a853f9ded1f6 \
+                    sha256  595e1dd7f3b472ea5f12af21d2fec8a2ea2cf8f9d93e67180197330b26df9b61 \
+                    size    13202
+
+python.versions     39 310 311 312
+
+python.pep517_backend   flit

@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem 1.0
+
+name                remind
+version             04.00.00
+revision            0
+categories          textproc pim
+license             GPL-2
+maintainers         nomaintainer
+description         Remind is a sophisticated calendar and alarm program.
+long_description    Remind is a sophisticated calendar and alarm service for UNIX. \
+                    It is a command line application which interacts well with other \
+                    programs. Remind offers a specialized scripting language which can \
+                    be used to express rather complicated scheduling methods in just a few lines.
+
+homepage            https://dianne.skoll.ca/projects/remind/
+master_sites        ${homepage}/download/
+
+checksums           rmd160  ef3ccdedd29f217b1d6bdfceeef7ff92b64e0ead \
+                    sha256  23b6e6b0edc40149e6a362a8232e66cb15ee641f2dcece640845e91b9e74c7c6 \
+                    size    462571
+
+livecheck.type      regex
+livecheck.regex     "remind-(.*?).tar.gz"
+
+configure.args      --mandir=\\\${prefix}/share/man
+
+destroot.destdir    prefix=${destroot}${prefix}
+
+post-destroot {
+    set docdir ${prefix}/share/${subport}
+    xinstall -d ${destroot}${docdir}
+    copy ${worksrcpath}/examples ${destroot}${docdir}
+}

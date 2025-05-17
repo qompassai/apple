@@ -1,0 +1,67 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+legacysupport.newest_darwin_requires_legacy 18
+legacysupport.use_mp_libcxx yes
+
+# src/third_party/blake3/CMakeLists.txt checks CMAKE_SIZEOF_VOID_P
+PortGroup           muniversal 1.0
+
+github.setup        ccache ccache 4.10.2 v
+revision            0
+checksums           rmd160  81b7c987b956d4d34b5f93ddc00e7925e4caa926 \
+                    sha256  c0b85ddfc1a3e77b105ec9ada2d24aad617fa0b447c6a94d55890972810f0f5a \
+                    size    485460
+
+categories          devel
+platforms           darwin freebsd
+license             GPL-3+
+
+maintainers         {ryandesign @ryandesign} openmaintainer
+
+description         object-file caching compiler wrapper
+
+long_description \
+    ccache is a compiler cache.  It acts as a caching pre-processor to C/C++ \
+    compilers, using the -E compiler switch and a hash to detect when a \
+    compilation can be satisfied from cache.  This often results in a 5 to 10 \
+    times speedup in common compilations.
+
+homepage            https://ccache.dev
+github.tarball_from releases
+use_xz              yes
+
+platform darwin 8 {
+    patchfiles-append  patch-ccache-no-posix-tiger.diff
+}
+
+compiler.c_standard 1999
+
+compiler.cxx_standard \
+                    2017
+
+depends_build-append \
+                    bin:perl:perl5 \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:hiredis \
+                    port:zstd
+
+# Do not use ccache to build this port unless MacPorts tells it to.
+configure.args-append -DUSE_CCACHE=NO
+
+configure.args-append -DENABLE_DOCUMENTATION=OFF
+
+variant doc description {Enable documentation} {
+    configure.args-replace -DENABLE_DOCUMENTATION=OFF -DENABLE_DOCUMENTATION=ON
+    depends_build-append \
+                    port:asciidoctor
+    license_noconflict  asciidoctor
+}
+
+default_variants    +doc
+
+test.run            yes

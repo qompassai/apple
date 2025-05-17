@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                cflow
+version             1.7
+revision            0
+checksums           rmd160  8536f2cc963af08ab85faf205c984c751817bbd1 \
+                    sha256  9e278b10ea420a1ab7ecccd8335fc31fb1921e91ab99d77e33df0729e19dca3b \
+                    size    727604
+
+categories          devel
+platforms           darwin
+license             GPL-3+
+maintainers         nomaintainer
+
+description         A program for generating call graphs from C code.
+
+long_description    The cflow program is a tool which generates a call graph \
+                    from C source files. It is most often used with a program \
+                    like dot (from the graphviz package) in order to present \
+                    visual graphs of the paths along which a piece of software \
+                    may run.
+
+homepage            https://www.gnu.org/software/cflow/
+master_sites        gnu:cflow
+use_xz              yes
+
+depends_lib         port:gettext \
+                    port:libiconv
+
+configure.args      --infodir=${prefix}/share/info

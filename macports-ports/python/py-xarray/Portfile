@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-xarray
+version             2022.12.0
+revision            0
+
+categories-append   science math
+supported_archs     noarch
+platforms           {darwin any}
+license             Apache-2
+maintainers         {petr @petrrr} openmaintainer
+
+description         Provides N-D labeled arrays and datasets in Python
+long_description    \
+    xarray (formerly xray) is an open source project and Python package that \
+    aims to bring the labeled data power of pandas to the physical sciences, \
+    by providing N-dimensional variants of the core pandas data structures.
+
+homepage            https://github.com/pydata/xarray
+
+checksums           rmd160  043849f636c2fb0fb0d682a3b7a00bebea8c1a66 \
+                    sha256  083d08e552a7647c7ece136dfa3a4b6a1379256beb55bbed8b8ddf05f1e14ec7 \
+                    size    3060755
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-setuptools_scm \
+                    port:py${python.version}-setuptools_scm_git_archive
+
+    depends_lib-append \
+                    port:py${python.version}-numpy \
+                    port:py${python.version}-packaging \
+                    port:py${python.version}-pandas
+
+    test.run        yes
+}

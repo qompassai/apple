@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-astropy-iers-data
+python.rootname     astropy_iers_data
+version             0.2024.8.5.0.32.23
+revision            0
+license             BSD
+platforms           {darwin any}
+supported_archs     noarch
+maintainers         {mps @Schamschula} openmaintainer
+description         IERS Earth Rotation and Leap Second tables for the astropy core \
+                    package
+long_description    {*}${description}
+homepage            https://github.com/astropy/astropy-iers-data
+
+checksums           rmd160  bc564a027b74ef9ed1ce884c5179073a7991d068 \
+                    sha256  ed07ceccccf15d1d1185a544f5eed3da965657241a46da2f3b012e707a3a0123 \
+                    size    1873878
+
+python.versions     39 310 311 312
+
+if {${name} ne ${subport}} {
+    python.pep517   yes
+
+    depends_build-append \
+                    port:py${python.version}-setuptools_scm
+}

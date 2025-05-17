@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                wireguard-go
+version             0.0.20230223
+revision            0
+checksums           rmd160  d1634ffe84be9f2d49edc8ded00f0fb161c7215e \
+                    sha256  ed3694e808d96720e79e17ae396f89f7c2024da07f3449ff0af8fbc6dbfa7f6a \
+                    size    77552
+
+categories          net
+platforms           darwin
+license             GPL-2
+maintainers         {isi.edu:calvin @cardi} openmaintainer
+description         Userspace Go implementation of WireGuard VPN
+long_description    \
+    WireGuard-go is the userspace Go implementation of WireGuard, a \
+    novel VPN that runs inside the Linux Kernel and utilizes \
+    state-of-the-art cryptography. It aims to be faster, simpler, \
+    leaner, and more useful than IPSec, while avoiding the massive \
+    headache. It intends to be considerably more performant than \
+    OpenVPN. WireGuard is designed as a general purpose VPN for \
+    running on embedded interfaces and super computers alike, fit for \
+    many different circumstances. It runs over UDP.
+
+homepage            https://www.wireguard.com/
+master_sites        https://git.zx2c4.com/wireguard-go/snapshot/
+use_xz              yes
+
+depends_build       port:go
+
+use_configure       no
+
+build.target
+
+use_parallel_build  no
+
+destroot.args       DESTDIR=${destroot} \
+                    PREFIX=${prefix}
+
+livecheck.url       https://git.zx2c4.com/wireguard-go/refs/

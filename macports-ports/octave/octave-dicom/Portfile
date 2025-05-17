@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           octave 1.0
+
+octave.setup        sourceforge octave dicom 0.6.1
+revision            0
+license             GPL-3+
+maintainers         {mps @Schamschula} openmaintainer
+description         Digital communications in medicine (DICOM) file io.
+long_description    {*}${description}
+
+checksums           rmd160  0bdc4d3b078ef481a619d7d48fd16cd2ae750168 \
+                    sha256  7ab519b9d3a49f29a01a9aea52109a4af37f5a5996675aa01fc1c362b34e8362 \
+                    size    890055
+
+depends_build       path:bin/cmake:cmake
+
+depends_lib         port:gdcm
+
+configure.args      GDCM_LIBS=-lgdcmCommon.2.8

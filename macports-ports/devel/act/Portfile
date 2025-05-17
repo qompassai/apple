@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/nektos/act 0.2.65 v
+go.offline_build    no
+github.tarball_from archive
+revision            0
+
+description         Run your GitHub Actions locally
+
+long_description    \
+    ${name} allows you to run your GitHub Actions locally using Docker.
+
+categories          devel
+installs_libs       no
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+platforms           darwin linux
+
+checksums           rmd160  2875f2f8841863c5eba69888a21c48c785c670aa \
+                    sha256  e5096be2d8fc24f98aed678ff5b9c5ed5b8eb02b667fdf15d79d265679480ee5 \
+                    size    9280994
+
+build.cmd           make
+build.pre_args      VERSION=${version}
+build.args          build
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/dist/local/act ${destroot}${prefix}/bin/
+}
+
+notes "${name} requires a running version of Docker Desktop"

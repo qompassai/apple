@@ -1,0 +1,31 @@
+--- makefile.orig	2023-07-04 11:46:00.000000000 -0500
++++ makefile	2023-12-28 00:00:31.000000000 -0600
+@@ -94,7 +94,7 @@
+ 
+ DEBUG_FLAGS		= -ggdb3 -fno-omit-frame-pointer -Og
+ 
+-CFLAGS			= -c -D__UNIX__ -DNDEBUG -I.
++CFLAGS			+= -c -D__UNIX__ -DNDEBUG -I.
+ CFLAGS_DEBUG	= -c -D__UNIX__ -I. -g -Og
+ CFLAGS_DEBUGGCC	= -c -D__UNIX__ -I. $(DEBUG_FLAGS)
+ 
+@@ -583,6 +583,8 @@
+ 	if [ -f "$(DYLIBNAME)" ] ; then \
+ 		cp "$(DYLIBNAME)" "$(DESTDIR)$(PATH_LIB)" ; \
+ 		chmod 755 "$(DESTDIR)$(PATH_LIB)/$(DYLIBNAME)" ; \
++		ln -s "$(DYLIBNAME)" "$(DESTDIR)$(PATH_LIB)/lib$(PROJ).$(MAJ).dylib" ; \
++		ln -s "$(DYLIBNAME)" "$(DESTDIR)$(PATH_LIB)/lib$(PROJ).dylib" ; \
+ 	fi
+ 	cp cryptlib.h "$(DESTDIR)$(PATH_INCLUDE)"
+ 	chmod 644 "$(DESTDIR)$(PATH_INCLUDE)/cryptlib.h"
+@@ -1798,8 +1800,9 @@
+ 				fi
+ 
+ $(DYLIBNAME):	$(OBJS) $(EXTRAOBJS) $(TESTOBJS)
+-				@$(LD) -dynamiclib -compatibility_version $(MAJ).$(MIN) \
++				$(LD) $(LDFLAGS) -dynamiclib -compatibility_version $(MAJ).$(MIN) \
+ 					-current_version $(MAJ).$(MIN).$(PLV) \
++					-install_name $(PATH_LIB)/$(DYLIBNAME) \
+ 					`./tools/getlibs.sh $(LD) $(OSNAME)` \
+ 					-o $(DYLIBNAME) $(OBJS) $(EXTRAOBJS)
+ 

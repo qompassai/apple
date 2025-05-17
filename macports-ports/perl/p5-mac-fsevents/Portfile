@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           perl5 1.0
+
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         Mac-FSEvents 0.22
+revision            0
+license             {Artistic-1 GPL}
+maintainers         nomaintainer
+description         Mac::FSEvents - Monitor a directory structure for changes
+long_description    {*}${description}
+
+platforms           darwin
+
+checksums           rmd160  f9a1d07749fcd62e2c824b4368266a590595e0b7 \
+                    sha256  6d2f34d189e1ef57ad78293c35db86af049578754214745a13fb4bb1f35ab634 \
+                    size    141467

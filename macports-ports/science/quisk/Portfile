@@ -1,0 +1,54 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           legacysupport 1.1
+PortGroup           python 1.0
+PortGroup           app 1.0
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+name                quisk
+categories          science comms
+platforms           darwin
+license             GPL-2
+maintainers         {ra1nb0w @ra1nb0w} openmaintainer
+description         QUISK is a Software Defined Radio (SDR) transceiver that can control various radio hardware.
+long_description    ${description}
+
+homepage            http://james.ahlstrom.name/quisk/
+
+version             4.2.18
+checksums           rmd160  4330e086566ae7665e3737884a5032a8ce1f0a2b \
+                    sha256  b3adf67bf15fe9dfccbfdc920ebc2ece189a8035637409a260dbdeeb52a2cada \
+                    size    4805151
+revision            1
+
+python.default_version 39
+
+patchfiles-append \
+    codec2_fix_freedv.c.patch
+
+depends_build-append \
+    port:py${python.version}-setuptools
+
+depends_lib-append \
+    port:py${python.version}-pyusb \
+    port:py${python.version}-wxpython-4.0 \
+    port:portaudio \
+    port:SoapySDR \
+    port:fftw-3 \
+    port:codec2 \
+    port:wdsp
+
+
+post-patch {
+     reinplace "s|@PREFIX_LIB@|${prefix}/lib|g" \
+         ${worksrcpath}/freedv.c
+}
+
+app.create yes
+app.name Quisk
+app.executable ${python.prefix}/bin/quisk
+app.icon ${filespath}/icon.icns
+app.retina yes

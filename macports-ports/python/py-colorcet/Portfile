@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-colorcet
+version             3.1.0
+revision            0
+license             CC-BY
+maintainers         {mps @Schamschula} openmaintainer
+description         Collection of perceptually uniform colormaps
+long_description    {*}${description}
+supported_archs     noarch
+platforms           {darwin any}
+homepage            https://colorcet.holoviz.org
+
+python.versions     38 39 310 311 312
+
+checksums           rmd160  1e952a624922a7f12b185cfb8dfb0680f1547bf1 \
+                    sha256  2921b3cd81a2288aaf2d63dbc0ce3c26dcd882e8c389cc505d6886bf7aa9a4eb \
+                    size    2183107
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-param \
+                    port:py${python.version}-pyct \
+                    port:py${python.version}-setuptools_scm
+}

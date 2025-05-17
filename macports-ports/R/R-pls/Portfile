@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran khliland pls 2.8-4
+revision            0
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Partial least squares and principal component regression
+long_description    {*}${description}
+homepage            https://github.com/khliland/pls
+checksums           rmd160  8a0f16ecaa05df18e2985487e730af92000a689f \
+                    sha256  785b1b63639754811bec124fcd46bd821c76611380f49a7555695a2969b3d562 \
+                    size    4366867
+supported_archs     noarch
+
+depends_test-append port:R-Rmpi \
+                    port:R-RUnit \
+                    port:R-testthat
+
+test.run            yes

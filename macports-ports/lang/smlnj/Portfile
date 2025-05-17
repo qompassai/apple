@@ -1,0 +1,126 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                smlnj
+version             110.99.5
+categories          lang ml
+license             BSD
+maintainers         {toby @tobypeterson} openmaintainer
+description         Standard ML of New Jersey
+long_description \
+    Standard ML of New Jersey (abbreviated SML/NJ) is a \
+    compiler for the Standard ML '97 programming language \
+    with associated libraries, tools, and documentation. \
+    SML/NJ is free, open source software.
+homepage            http://www.smlnj.org/
+platforms           darwin
+
+master_sites        http://smlnj.cs.uchicago.edu/dist/working/${version}/
+dist_subdir         ${name}/${version}_${revision}
+
+supported_archs     x86_64 i386 ppc
+universal_variant   no
+
+distfiles
+checksums
+
+# Files needed for basic distribution.
+set srcs [list \
+    doc.tgz                 632d1d1a14fdf7bb333456d35fb698b8323f754c43987d59d37e6221421e0f16 94b1f0205d635577c8680ef7eb67d3ca0282efbd 2529773 \
+    boot.amd64-unix.tgz     a5f1a99f1e2acdc18b91d1c45e3d74f0349a19a8d7819593fccb3df7eaeb61bb 26443dd4a0b96bc3c9471887c7651f3f0efdbcf1 6000465 \
+    boot.ppc-unix.tgz       e4ab914953f54ca40e2f74fcfdff76ee40d3564b73dae27511f23e443a98ed03 dcaaea2646ffdf92743f4871ecf28b64fdb71f9a 5879832 \
+    boot.x86-unix.tgz       bce6ae643b4f1704e9b679ae2feddcc212c51f8de03cf1106ac175487e2ee0e5 30c288bd80414b87138933d0b937844cb351951d 5957165 \
+    config.tgz              f32b95bf52f5b75129e2422e56fd3edb1236617d7603d0c766c3c80438cdd15d 50730a50ad3ef41be7c75dececdea91ea9e51e7e 23303   \
+    cm.tgz                  6d1ac7df28c99f2a531a183454bfb6e46d86fbfdd97bade08070e0001ca14eb2 9a7cb106a4d6f962dbe0aa6f9870526317229e48 220329  \
+    compiler.tgz            97b59e52139ec698e49108e12749c774055eb6e28ab7c08513ce7d357a8e361d d3a0d6938571a453cfafabeb7faade503eb3b982 888050  \
+    runtime.tgz             71257c52fdc41d4f7afcab05fff44960f5c98b300eed598a9c896f0e45826d30 bc6721b2ffe5b4e617e2bb8a9f43586a0a56c4bf 335029  \
+    system.tgz              bc1db87aa5d39adce31252f378ac12e1b8468369695be11fde57b0c795babcc3 d22bd95a9f33fc7df012ed376ccfb3c2689a746b 295177  \
+    MLRISC.tgz              663cdb6d6aef7f0d5ffb4bdf86809c147888468cfa17f41bba17d32449331a06 3838e0afac8e16c7947c1c9158f737b9fbf2e456 1457434 \
+    smlnj-lib.tgz           07b07e812821fed6f965e42826ea270e04b845251ce5362cff7c89e63b02828d 3ab6a4f5358d5fe2ea6297fd7c9815732b5295e8 658010  \
+    old-basis.tgz           e7ce144383eca8ed762ab478b76ee0457934632131bb692c006ab88c81978691 6f9c1df832f764f1fba57a7da7681c5225ea2dd0 1365    \
+    ckit.tgz                4db78e0e505f8519534e7b6b177948a081fb9b7b23920a21dbd5d2bfa51461ac 63b938f725a029e15f57a049ce0e6fd6c1dc3051 200816  \
+    nlffi.tgz               7eb22a06fccc05dac27d4446457dcf967f1ba412dafd940f73a9fdc11004c54b b7616618021c3f5209cb511615227ccee29a0460 74701   \
+    cml.tgz                 f7253d8014cdff3d6411cbf5cbc38fabee18d2914bcd4341f294e67f72b83365 b4999947ac05967cc76dcf5ff52fec5c70bf966c 103975  \
+    eXene.tgz               85da08ffa33a159708b1de5e25fd430e1893595dd3b8f15f039751f62538de55 09fd465f1f45803dee7b569ab23cd065d9d25962 714471  \
+    ml-lpt.tgz              f54f06a0bd67d8dcf22a1d2d891a9668a2dae114b8875abda061a181a20d67b1 0ec0fbd4adca581a977320b78bc207c07747c378 267318  \
+    ml-lex.tgz              367a5ccb2c95f9e0b711bc3beebd6624488b6c6f27665e23695edf3f5409199a dbd0b1af13ba2d48ce57ec1507943a7a3b83d9b2 28040   \
+    ml-yacc.tgz             82354193c82b40b8f4fae0b6fb34e8fd7e53adc6826f4c646d1af2f48b13e7a4 af2a111f0d6e1b6629231a8adb108a732671df11 101379  \
+    ml-burg.tgz             5c60bad244bfc399f125ed081d6c47cffc7082c98aa2e913978a637458c8cf0d 47a49ca84ae044cc7bf7f08dd7d33c134978a40c 40293   \
+    pgraph.tgz              5524349cf1656ee7a96d54590a661ae703af4146cfd0c5d1adad15f25aef20ac 55b313babb40a1fe7591554f344862c961cc926d 5367    \
+    trace-debug-profile.tgz d655bfcc98a26453988c534e40923330fe0cb3b33441d6081c70280e228de8a7 0ed929c483fa84091473d095ed2a5fb5f9234cda 3892    \
+    heap2asm.tgz            ef57870b049a5686169c8b4891797b12e07d64b93d5a912f7486e6456fa8e1ad 86ff4d673ed95b105a2552793bbd43a952186a05 1763    \
+    smlnj-c.tgz             6a7292e8fab11253b3e8c601eddc9dfdda8969a87b0b2226f058c6bb7fc2e21f 58a1ef6379b0a69e0292b005c75403c3e0de115e 10594   \
+    asdl.tgz                8496b5464fc61e40b0576cf2713619242f0a876e2d821ad3bec09b01c5ab373f ca7dafdb897ea723e3ee9abcfd8229b83a322322 241656  \
+]
+
+foreach {tarball sha256 rmd160 size} $srcs {
+    distfiles-append $tarball
+    checksums-append $tarball sha256 $sha256 rmd160 $rmd160 size $size
+}
+
+### extract ###
+extract.mkdir       yes
+extract.only        config.tgz
+
+### patch ###
+patchfiles          patch-config__install.sh-correct-compiler.diff
+
+post-patch {
+    reinplace "s|@CC@|${configure.cc}|" ${worksrcpath}/config/install.sh
+    reinplace "s|@CPP@|${configure.cc}|" ${worksrcpath}/config/install.sh
+    reinplace "s|@CFLAGS@|${configure.cflags} ${configure.cc_archflags}|" ${worksrcpath}/config/install.sh
+    reinplace "s|@LDFLAGS@|${configure.ldflags}|" ${worksrcpath}/config/install.sh
+}
+
+### configure ###
+configure {
+    reinplace "s|SRCARCHIVEURL=.*|SRCARCHIVEURL=file://${distpath}|" \
+        ${worksrcpath}/config/srcarchiveurl
+    reinplace "s|#request src-smlnj|request src-smlnj|" \
+        ${worksrcpath}/config/targets
+    reinplace "s|#request pgraph-util|request pgraph-util|" \
+        ${worksrcpath}/config/targets
+    reinplace "s|#request eXene|request eXene|" \
+        ${worksrcpath}/config/targets
+    reinplace "s|#request mlrisc-tools|request mlrisc-tools|" \
+        ${worksrcpath}/config/targets
+    reinplace "s|#request nowhere|request nowhere|" \
+        ${worksrcpath}/config/targets
+    reinplace "s|#  request heap2asm|  request heap2asm|" \
+        ${worksrcpath}/config/targets
+}
+
+# error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘ml_val_t’
+configure.cflags-append -std=c99
+
+### build ###
+build.env           URLGETTER=curl
+build.cmd           ${worksrcpath}/config/install.sh
+build.target
+if {${configure.build_arch} eq "x86_64"} {
+    build.args-append   -default 64
+}
+
+### destroot ###
+destroot {
+    set smlnj_home ${prefix}/share/smlnj
+
+    file mkdir ${destroot}${smlnj_home}
+    file copy ${worksrcpath}/bin ${destroot}${smlnj_home}
+    file copy ${worksrcpath}/lib ${destroot}${smlnj_home}
+
+    xinstall -m 755 ${filespath}/sml.sh ${destroot}${prefix}/bin/sml
+    reinplace "s|__SMLNJ_HOME__|${smlnj_home}|g" \
+        ${destroot}${prefix}/bin/sml
+
+    foreach prog [glob -directory ${worksrcpath}/bin *] {
+        set progname [file tail $prog]
+        if {![string equal $progname sml]} {
+            ln -s sml ${destroot}${prefix}/bin/${progname}
+        }
+    }
+}
+
+livecheck.type      regex
+livecheck.regex     {/working/(1[0-9.]+)/}

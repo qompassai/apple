@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           npm 1.0
+
+name                pnpm
+version             8.15.5
+revision            1
+
+categories          devel
+license             MIT
+maintainers         {@sainnhe gmail.com:sainnhe} openmaintainer
+
+description         Fast, disk space efficient package manager
+long_description    pnpm is a fast, disk space efficient package manager, \
+                    it uses a content-addressable filesystem to store all \
+                    files from all module directories on a disk.
+
+homepage            https://pnpm.io
+
+checksums           rmd160  8152acbfc0f63d87290862c594203a031bd1036f \
+                    sha256  4b4efa12490e5055d59b9b9fc9438b7d581a6b7af3b5675eb5c5f447cee1a589 \
+                    size    3821860

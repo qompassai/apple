@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+PortGroup           github 1.0
+
+github.setup        collective icalendar 4.0.9
+revision            0
+name                py-icalendar
+
+license             BSD
+platforms           {darwin any}
+supported_archs     noarch
+maintainers         nomaintainer
+
+description         The iCalendar package is a parser/generator of \
+                    RFC 2445 iCalendar files.
+long_description    The inspiration has come from the email package in \
+                    the standard lib, which I think is pretty simple, \
+                    yet efficient and powerful. The package can both \
+                    generate and parse iCalendar files, and can easily \
+                    be used as is. The aim is to make a package that \
+                    is fully compliant to RFC 2445, well designed, \
+                    simple to use and well documented.
+
+homepage            https://icalendar.readthedocs.org/
+
+checksums           rmd160  c11d9f651aef4d7a468ac87a9edca681b9639198 \
+                    sha256  94e088645b3095b7533cda274f5a9f5766f527f572babb31567d386b2072dae1 \
+                    size    69620
+
+python.versions     38 39
+
+if {${name} ne ${subport}} {
+    depends_lib-append  port:py${python.version}-dateutil \
+                        port:py${python.version}-setuptools \
+                        port:py${python.version}-tz
+
+    test.run        yes
+    python.test_framework
+    test.cmd        ${python.bin} setup.py
+
+    post-destroot {
+        xinstall -m 0644 -W ${worksrcpath} \
+            CHANGES.rst \
+            CONTRIBUTING.rst \
+            LICENSE.rst \
+            README.rst \
+            ${destroot}${prefix}/share/doc/${subport}
+    }
+}

@@ -1,0 +1,76 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+PortGroup           github 1.0
+
+github.setup        pydicom pydicom 2.4.4 v
+name                py-pydicom
+python.versions     38 39 310 311 312
+license             MIT BSD
+maintainers         {eborisch @eborisch} \
+                    openmaintainer
+supported_archs     noarch
+platforms           {darwin any}
+
+description         Python Module for working with DICOM files
+
+long_description    pydicom is a pure python package for working with DICOM \
+                    files. It was made for inspecting and modifying DICOM \
+                    files in an easy pythonic way. The modifications can be \
+                    written again to a new file. As a pure python package, it \
+                    should run anywhere python runs without any other \
+                    requirements.
+
+homepage            https://pydicom.github.io/pydicom/stable/index.html
+
+checksums           rmd160  2f21ababfeaacad5ab8d8a4c91beb54d5952437c \
+                    sha256  d96b0dfdef99651f7bc77747eb0fb030e31f20b4153210477478ac3ebf46c2d9 \
+                    size    2204042
+
+if {${name} ne ${subport}} {
+    depends_build-append    port:py${python.version}-flit
+    depends_lib-append      port:py${python.version}-numpy
+
+    variant doc description "Build offline documentation" {
+        depends_build-append \
+            port:py${python.version}-alabaster \
+            port:py${python.version}-matplotlib\
+            port:py${python.version}-numpydoc \
+            port:py${python.version}-Pillow \
+            port:py${python.version}-sphinx \
+            port:py${python.version}-sphinx-bootstrap-theme \
+            port:py${python.version}-sphinx-copybutton \
+            port:py${python.version}-sphinx-gallery \
+            port:py${python.version}-sphinx-issues \
+            port:py${python.version}-sphinx_rtd_theme
+
+        notes "
+            Documentation installed in :
+              file://${prefix}/share/doc/${subport}/html/index.html
+        "
+    }
+
+    post-extract {
+        reinplace s/sphinx-build/sphinx-build-${python.branch}/ \
+            doc/Makefile
+    }
+
+    post-build {
+        if {[variant_isset doc]} {
+            system -W ${worksrcpath}/doc/ \
+                "env PYTHONPATH='${worksrcpath}/build/lib' make html"
+        }
+    }
+
+    post-destroot {
+        set DOCDIR ${destroot}${prefix}/share/doc/${subport}
+        xinstall -d ${DOCDIR}
+        file copy ${worksrcpath}/LICENSE ${DOCDIR}
+
+        if {[variant_isset doc]} {
+            file copy ${worksrcpath}/doc/release_notes ${DOCDIR}
+            file copy ${worksrcpath}/doc/_build/html ${DOCDIR}
+        }
+    }
+}

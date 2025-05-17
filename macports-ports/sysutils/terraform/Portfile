@@ -1,0 +1,353 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               select 1.0
+
+name                    terraform
+categories              sysutils
+installs_libs           no
+# Hashicorp Terraform is now licensed under the BSL
+# https://www.hashicorp.com/license-faq#aug-10-announcement
+license                 Commercial Permissive
+homepage                https://www.terraform.io/downloads.html
+
+maintainers             {emcrisostomo @emcrisostomo} \
+                        {gmail.com:herby.gillot @herbygillot} \
+                        @pedrohdz \
+                        openmaintainer
+
+# *NOTE* Remember to update `latestVersion` on a version upgrade.
+set latestVersion       terraform-1.9
+
+set armAvailable        no
+set customDistSubDir    yes
+
+proc terraformBaseVersion {} {
+    global subport
+    return [lindex [split ${subport} "-"] 1]
+}
+
+proc terraformVersion {} {
+    global patchNumber
+    return [terraformBaseVersion].${patchNumber}
+}
+
+proc terraformDistBase {} {
+    global name
+    return ${name}_[terraformVersion]_darwin
+}
+
+subport terraform-1.9 {
+    set patchNumber     4
+    revision            0
+
+    set armAvailable    yes
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  6d79f1d3d1cce104a61bd14f6b662d9c06469e42 \
+                        sha256  d23c34dbd84884913a939f34abfc46065f2794f43e1614d0f7b70af4e206ac8a \
+                        size    27947064 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  d191daf7cc5744dd3903c055c9f9f085b5af0a8a \
+                        sha256  440865e068811f5573b900b6e9822e266c1e6074eb31daccc2537d1cf24a0dd7 \
+                        size    25723570
+
+    set customDistSubDir no
+}
+
+subport terraform-1.8 {
+    set patchNumber     5
+    revision            0
+
+    set armAvailable    yes
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  02be902b4283abd925c53c262659c46cc386a41e \
+                        sha256  051c702e156a4d1a1c628783cf2ca0e1db8cca7b4c0f1686ea623558ed5560f9 \
+                        size    27659471 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  34b4a8868ba8ecf4556f411b83101ad9a3346a42 \
+                        sha256  627c5005ab4a2bee36316f4967a41f16d55f79ea737f78b6bb34325c728c73e1 \
+                        size    25454927
+
+    set customDistSubDir no
+}
+
+subport terraform-1.7 {
+    set patchNumber     5
+    revision            0
+
+    set armAvailable    yes
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  e275422df8da1d6a44f84713131842e2b16e07b0 \
+                        sha256  0eaf64e28f82e2defd06f7a6f3187d8cea03d5d9fcd2af54f549a6c32d6833f7 \
+                        size    27560118 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  fe2bd475f4f3dd1e568fae5fcb1aeea2440a441e \
+                        sha256  99c4d4feafb0183af2f7fbe07beeea6f83e5f5a29ae29fee3168b6810e37ff98 \
+                        size    25902918
+
+    set customDistSubDir no
+}
+
+subport terraform-1.6 {
+    set patchNumber     6
+    revision            0
+
+    set armAvailable    yes
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  c170c3c03cf7783ad7317622c399df433988a53e \
+                        sha256  33376343c7e0279b674c1c8b8a31dc3174ac09dd796d32651cc5e3b98f220436 \
+                        size    26507656 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  f5b9c6b353ef7a03c3d2f2c080a47335ef758cb5 \
+                        sha256  01e608fc04cf54869db687a212d60f3dc3d5c828298514857f9e29f8ac1354a9 \
+                        size    24865571
+
+    set customDistSubDir no
+}
+
+subport terraform-1.5 {
+    set patchNumber     7
+    revision            0
+
+    set armAvailable    yes
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  d7c50065f08a09a34603caef28c003e164afd35a \
+                        sha256  b310ec0e626e9799000cfc8e30247cd827cf7f8030c8e0400257c7f111e93537 \
+                        size    22296467 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  6a845150b5f6ba25292df61097ae21ed7847d96a \
+                        sha256  db7c33eb1a446b73a443e2c55b532845f7b70cd56100bec4c96f15cfab5f50cb \
+                        size    21020511
+
+    set customDistSubDir no
+}
+
+subport terraform-1.4 {
+    set patchNumber     7
+    revision            0
+
+    set armAvailable    yes
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  c8b0bfb7af57bad9d02d8823b7fb9efff6ca4588 \
+                        sha256  603764c07862bd3a87fce193f8b9823383df22626b254f353c83511635763301 \
+                        size    22051376 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  b6df404982deb2d117e9b61abb263cfc7ab78e80 \
+                        sha256  4b2ae04467469b923d038e6720ae1f92cb2adaa96b7ab08199c2fffee8b45baa \
+                        size    20612022
+
+    set customDistSubDir no
+}
+
+subport terraform-1.3 {
+    set patchNumber     10
+    revision            0
+
+    set armAvailable    yes
+    # Keep dist_subdir since version has been stealth updated and there might be conflicts with the checksums.
+    # It is not needed for other subports since there are no conflicts.
+    dist_subdir         ${name}/[terraformDistBase]
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  b8f26c8d223d6994cbab22bc83bb7190ba807386 \
+                        sha256  e5cf68ef9b259503abf515a1716fcfe21d46af22e24b8ebbbe7849fbfafb428c \
+                        size    21195636 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  400bb1a0fa0ee0c09257ffe51e58508737ff74cf \
+                        sha256  39cf7882108034f78c0d9144153271efb11ba99924170828eda9b0196f3da6fd \
+                        size    19794701
+
+    set customDistSubDir no
+}
+
+subport terraform-1.2 {
+    set patchNumber     9
+    revision            2
+
+    set armAvailable    yes
+    # Keep dist_subdir since version has been stealth updated and there might be conflicts with the checksums.
+    # It is not needed for other subports since there are no conflicts.
+    dist_subdir         ${name}/[terraformDistBase]_1
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  02ba5fe97460e154341311b9a7730cd0774d8d45 \
+                        sha256  84a678ece9929cebc34c7a9a1ba287c8b91820b336f4af8437af7feaa0117b7c \
+                        size    21672810 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  64b51950c5c8d14099b5ff58cd9656101817b611 \
+                        sha256  bc3b94b53cdf1be3c4988faa61aad343f48e013928c64bfc6ebeb61657f97baa \
+                        size    20280541
+}
+
+subport terraform-1.1 {
+    set patchNumber     9
+    revision            1
+
+    set armAvailable    yes
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  f8ccb12d1edec6cf17ea5a8f741cb993e9573253 \
+                        sha256  26afa7cda355fbf32a2b4cfd9122a49132f1b68337691b91f05caa0b1023c388 \
+                        size    20850633 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  d257bc5f7d94fde348975b6b9092e928271b59e2 \
+                        sha256  80a230b56853f0fd50e12006c0d527da6a7f2e9974f25f7d372abfa2761ee3a3 \
+                        size    20093183
+}
+
+subport terraform-1.0 {
+    set patchNumber     11
+    revision            1
+
+    set armAvailable    yes
+
+    checksums           [terraformDistBase]_amd64.zip \
+                        rmd160  a988402d3cd99b9d932206626b711725a9b7853b \
+                        sha256  5b6771c87f3febde756baa132d38a67fcac284291a1f88918a58a41d879d2558 \
+                        size    19422758 \
+                        [terraformDistBase]_arm64.zip \
+                        rmd160  b1c556cfaa52c9b3a4e23d0a84093f69680926ae \
+                        sha256  435cc512332c28c38c98cda11a2ef3670564cfc85ba4e6fe0a73462713799f9e \
+                        size    18467870
+}
+
+subport terraform-0.15 {
+    set patchNumber     5
+    revision            1
+    checksums           rmd160  6cf3903793848fd2ef0180ec37b3989f1117536a \
+                        sha256  4ee2ed9b769426cc9f13bd26c133ee66c6046acffeef632ddf0ef66e3d36a981 \
+                        size    33932321
+}
+
+subport terraform-0.14 {
+    set patchNumber     11
+    revision            1
+    checksums           rmd160  658517e12bcf8457a9c3fd5eda70d3a5d49529ba \
+                        sha256  143ee31a4ae61564762ca5fe40851a0ec661698b73026e3cc0061f9867c7b67f \
+                        size    34764927
+}
+
+subport terraform-0.13 {
+    set patchNumber     7
+    revision            1
+    checksums           rmd160  58d16b69ad295ff35c3b3cf971adf93d2ce7afd6 \
+                        sha256  2ee62413afc847d9771d46d73fad6c7e8670bcdf44190320b5fb6a3a38ec6480 \
+                        size    35823336
+}
+
+subport terraform-0.12 {
+    set patchNumber     31
+    revision            1
+    checksums           rmd160  8d8c6842db51226e6fe01ab9c84fb91013b94be3 \
+                        sha256  794e736283b93b364d7f1c36ec8f47912ec6f6a0692b2108d0fb3908b5d3b5af \
+                        size    29365294
+}
+
+subport terraform-0.11 {
+    set patchNumber     15
+    revision            1
+    checksums           rmd160  2a6145f60df76d1052583b5cb82e15e3865d44e0 \
+                        sha256  e98434b0d35c4ec058479148dd590d2bbf3e419fcc6db204522cc4b0bbd9ec25 \
+                        size    22024453
+}
+
+subport terraform_select {}
+
+if {${subport} eq ${name}} {
+    PortGroup           obsolete 1.0
+
+    replaced_by         ${latestVersion}
+    version             1.9.4
+    revision            0
+
+} elseif {${subport} eq "terraform_select"} {
+    version             0.0.0
+    revision            0
+    supported_archs     noarch
+    platforms           any
+
+    description         Common files for selecting the default terraform \
+                        version
+    long_description    This port installs files that allow 'port select' \
+                        to create links to the preferred default version \
+                        of terraform.
+    homepage            https://www.macports.org/
+
+    distfiles
+    use_configure       no
+    build {}
+
+    destroot {
+        select::install terraform ${filespath}/base
+        select::install terraform ${filespath}/none
+    }
+
+    livecheck.type     none
+
+} else {
+    set baseVersion     [terraformBaseVersion]
+    set baseName        terraform${baseVersion}
+
+    version             [terraformVersion]
+
+    distname            [terraformDistBase]_amd64
+    supported_archs     x86_64
+
+    if ${armAvailable} {
+        supported_archs x86_64 arm64
+
+        if {${build_arch} eq "arm64"} {
+            distname    [terraformDistBase]_arm64
+        }
+    }
+
+    if ${customDistSubDir} {
+        dist_subdir   ${name}/${version}_${revision}
+    }
+
+    depends_run         port:terraform_select
+
+    description         A tool for building, changing, and versioning \
+                        infrastructure safely and efficiently.
+    long_description \
+                        Terraform is an infrastructure as code software \
+                        by HashiCorp. It allows users to define a datacenter \
+                        infrastructure in a high-level configuration language, \
+                        from which it can create an execution plan to build \
+                        the infrastructure in a service provider such as AWS.
+
+    master_sites        https://releases.hashicorp.com/${name}/${version}
+
+    use_configure       no
+    use_zip             yes
+    extract.mkdir       yes
+
+    select.group        terraform
+    select.file         ${workpath}/${baseName}
+
+    build {
+        file copy ${filespath}/terraformX.YY.template ${workpath}/${baseName}
+        reinplace "s|@@BASE_VERSION@@|${baseVersion}|g" ${workpath}/${baseName}
+    }
+
+    destroot {
+        xinstall ${worksrcpath}/terraform \
+            ${destroot}${prefix}/bin/terraform${baseVersion}
+    }
+
+    set regexVersionPart [string map {. {\.}} $baseVersion]
+    livecheck.type      regex
+    livecheck.url       https://releases.hashicorp.com/terraform/
+    livecheck.regex     >terraform_(${regexVersionPart}\\.\\d+)<
+
+    notes "
+    To make this the default terraform run:
+        sudo port select --set terraform ${baseName}
+    "
+}

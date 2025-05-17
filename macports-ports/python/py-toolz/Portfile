@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-toolz
+version             0.12.1
+revision            0
+categories-append   devel
+license             BSD
+supported_archs     noarch
+platforms           {darwin any}
+
+python.versions     38 39 310 311 312
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         List processing tools and functional utilities.
+long_description    {*}${description}
+
+homepage            https://github.com/pytoolz/toolz/
+
+checksums           rmd160  db557d701a4ceaf9140f2c05125b20429ce64711 \
+                    sha256  ecca342664893f177a13dac0e6b41cbd8ac25a358e5f215316d43e2100224f4d \
+                    size    66550

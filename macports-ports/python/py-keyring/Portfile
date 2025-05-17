@@ -1,0 +1,55 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-keyring
+version             25.2.1
+revision            0
+
+categories-append   security
+platforms           {darwin any}
+supported_archs     noarch
+license             {MIT PSF}
+maintainers         {reneeotten @reneeotten} openmaintainer
+
+description         Python interface to access the system keyring service
+long_description    The Python keyring lib provides a easy way to access the system \
+                    keyring service from python. It can be used in any application \
+                    that needs safe password storage. The OSXKeychain keyring service \
+                    supports the Keychain service in Mac OS X.
+
+homepage            https://github.com/jaraco/keyring
+
+checksums           rmd160  07a6a6bb52d535f5d5cac0552dd6f361ea4e3f7f \
+                    sha256  daaffd42dbda25ddafb1ad5fec4024e5bbcfe424597ca1ca452b299861e49f1b \
+                    size    60797
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-setuptools_scm
+
+    depends_lib-append \
+                    port:py${python.version}-jaraco.classes \
+                    port:py${python.version}-jaraco.functools \
+                    port:py${python.version}-jaraco.context
+
+    if {${python.version} < 312} {
+        depends_lib-append \
+                    port:py${python.version}-importlib-metadata
+    }
+
+    if {${python.version} < 39} {
+        depends_lib-append \
+                    port:py${python.version}-importlib-resources
+    }
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} NEWS.rst LICENSE README.rst \
+            ${destroot}${docdir}
+    }
+}

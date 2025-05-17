@@ -1,0 +1,61 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+PortGroup           select 1.0
+
+name                py-autopep8
+version             2.3.1
+revision            0
+
+categories-append   devel
+supported_archs     noarch
+platforms           {darwin any}
+license             MIT
+maintainers         {reneeotten @reneeotten} openmaintainer
+
+description         A tool that automatically formats Python code to \
+                    conform to the PEP 8 style guide
+long_description    autopep8 automatically formats Python code to \
+                    conform to the PEP 8 style guide. It uses the \
+                    pycodestyle utility to determine what parts of \
+                    the code needs to be formatted. autopep8 is \
+                    capable of fixing most of the formatting issues \
+                    that can be reported by pycodestyle.
+
+homepage            https://github.com/hhatto/autopep8
+
+checksums           rmd160  d87fd84797e70c0c026d3a90eb90ae3da4075ec2 \
+                    sha256  8d6c87eba648fdcfc83e29b788910b8643171c395d9c4bcf115ece035b9c9dda \
+                    size    92064
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_run-append \
+                    port:${python.rootname}_select \
+                    port:py${python.version}-codestyle
+
+    if {${python.version} < 311} {
+        depends_run-append \
+                    port:py${python.version}-tomli
+    }
+
+    test.run        yes
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} README.rst LICENSE \
+            AUTHORS.rst ${destroot}${docdir}
+    }
+
+    select.group    ${python.rootname}
+    select.file     ${filespath}/${python.rootname}-${python.version}
+    notes "
+To make the Python ${python.branch} version of autopep8 the one that is run\
+when you execute the commands without a version suffix, e.g. 'autopep8', run:
+
+    sudo port select --set ${select.group} [file tail ${select.file}]
+"
+}

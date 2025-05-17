@@ -1,0 +1,62 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+PortGroup           github 1.0
+
+github.setup        dbcli mycli 1.27.2 v
+github.tarball_from archive
+revision            0
+
+categories          databases python
+maintainers         nomaintainer
+license             BSD
+supported_archs     noarch
+platforms           {darwin any}
+description         A Terminal Client for MySQL with AutoCompletion and Syntax Highlighting
+long_description    {*}${description}
+
+homepage            https://mycli.net
+
+checksums           rmd160  e8af29534da419053763a87b251a8dfc3646e678 \
+                    sha256  2d89259911289cc09295875c4017b0e0b6db1a83a3600c67378fcdcb6eba2454 \
+                    size    286537
+
+variant python38 conflicts python39 python310 description "Use Python 3.8" {}
+variant python39 conflicts python38 python310 description "Use Python 3.9" {}
+variant python310 conflicts python38 python39 description "Use Python 3.10" {}
+
+if {[variant_isset python38]} {
+    python.default_version 38
+} elseif {[variant_isset python39]} {
+    python.default_version 39
+} else {
+    default_variants +python310
+    python.default_version 310
+}
+
+depends_lib-append  port:py${python.version}-cli-helpers \
+                    port:py${python.version}-click \
+                    port:py${python.version}-configobj \
+                    port:py${python.version}-cryptography \
+                    port:py${python.version}-paramiko \
+                    port:py${python.version}-prompt_toolkit \
+                    port:py${python.version}-pygments \
+                    port:py${python.version}-pymysql \
+                    port:py${python.version}-pyperclip \
+                    port:py${python.version}-setuptools \
+                    port:py${python.version}-sqlparse \
+                    port:py${python.version}-pyaes
+
+test.run            yes
+test.env-append     PYTHONPATH=${worksrcpath}/build/lib
+test.cmd            ${python.bin}
+test.pre_args       -m ${name}.main
+test.args           --version
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${subport}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} changelog.md README.md \
+        LICENSE.txt CONTRIBUTING.md AUTHORS.rst ${destroot}${docdir}
+}

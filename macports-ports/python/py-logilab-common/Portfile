@@ -1,0 +1,72 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-logilab-common
+version             2.0.0
+revision            0
+categories-append   devel
+license             LGPL-2.1+
+supported_archs     noarch
+platforms           {darwin any}
+
+python.versions     27 38 39 310 311 312
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         A number of modules used by various projects from Logilab
+long_description    {*}${description}
+
+homepage            http://www.logilab.org/project/logilab-common
+
+checksums           rmd160  c249b9fb7e9e989c0edd7a26f92f184b5ff18d6d \
+                    sha256  a23bd1da4dd6a63e448f4392e7b2386855ff70615578bfcf993eeb8824de970b \
+                    size    187453
+
+if {${name} ne ${subport}} {
+    depends_lib-append  port:py${python.version}-setuptools
+
+    if {${python.version} eq 27} {
+        version             1.4.4
+        revision            0
+        distname            ${python.rootname}-${version}
+        checksums           rmd160  7d8a73eda46a08132d83e41707fba15e945a4c4b \
+                            sha256  8c1bf26431a3b487940cd4a7c0eefde328f5ff7098222ee695805752dae94aa6 \
+                            size    177237
+        depends_lib-append  port:py${python.version}-six
+    } else {
+        python.pep517       yes
+
+        depends_lib-append  port:py${python.version}-mypy_extensions \
+                            port:py${python.version}-typing_extensions
+
+        if {${python.version} < 310} {
+            depends_lib-append  port:py${python.version}-importlib-metadata
+        }
+    }
+
+    # Fix permissions
+    post-extract {
+        fs-traverse item ${worksrcpath} {
+            if {[file isdirectory ${item}]} {
+                file attributes ${item} -permissions a+rx
+            } elseif {[file isfile ${item}]} {
+                file attributes ${item} -permissions a+r
+            }
+        }
+    }
+
+    post-destroot {
+        xinstall -m 755 -d ${destroot}${prefix}/share/doc/${subport}
+        if {${python.version} ne 27} {
+            xinstall -m 644 -W ${worksrcpath} ChangeLog README.rst \
+                ${destroot}${prefix}/share/doc/${subport}
+        } else {
+            xinstall -m 644 -W ${worksrcpath} ChangeLog \
+                ${destroot}${prefix}/share/doc/${subport}
+        }
+    }
+
+    livecheck.type      none
+}

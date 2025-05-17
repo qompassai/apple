@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        behdad icu-le-hb 1.2.3
+revision            4
+checksums           rmd160  97535a0ac1f1f49122c7c6e5bb25fe01888ba302 \
+                    sha256  11a7ba35ee6af95fb5d92b9776eb06ebd0a713e7520e8499b37fbc8eebef9321 \
+                    size    416596
+
+categories          devel textproc
+maintainers         {ryandesign @ryandesign} openmaintainer
+license             MIT
+
+description         library implementing the ICU Layout Engine (icu-le) API
+
+long_description    ${subport} is a {*}${description} using external HarfBuzz \
+                    library for implementation. This is useful as a \
+                    compatibility layer to make applications using ICU Layout \
+                    Engine to use HarfBuzz without porting them to use the \
+                    HarfBuzz API.
+
+github.tarball_from releases
+
+depends_build       port:pkgconfig
+
+depends_lib         path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+                    path:lib/pkgconfig/icu-uc.pc:icu
+
+configure.args      --disable-silent-rules
+
+compiler.cxx_standard \
+                    2011
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${subport}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} \
+                    AUTHORS \
+                    COPYING \
+                    NEWS \
+                    README \
+                    ${destroot}${docdir}
+}

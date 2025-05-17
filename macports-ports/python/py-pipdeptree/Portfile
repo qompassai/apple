@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-pipdeptree
+version             2.7.1
+license             MIT
+platforms           {darwin any}
+supported_archs     noarch
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+description         Command line utility to show dependency tree of packages
+long_description    {*}${description}
+
+homepage            https://github.com/naiquevin/pipdeptree
+
+checksums           rmd160  27507e2e5d206951accec0ddf30132eecfd9b24e \
+                    sha256  550bd7679379e7290739384f3e9518835620e814cc29ba709513952b627da506 \
+                    size    122307
+
+python.pep517       yes
+python.pep517_backend \
+                    hatch
+
+python.versions     38 39 310 311
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-hatch-vcs
+
+    depends_lib-append \
+                    port:py${python.version}-pip
+}

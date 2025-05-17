@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           perl5 1.0
+
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         Template-Tiny 1.14
+license             {Artistic-1 GPL}
+platforms           {darwin any}
+maintainers         nomaintainer
+description         Template::Tiny - Template Toolkit reimplemented in as little code as possible
+long_description    ${description}
+
+checksums           rmd160  836bdf851109646de02b9aa013b1c08849074ba6 \
+                    sha256  819cfab6044483cfe28ceb287fddfc3176a2025b1b6f0e980b2dcc26d2269b4c \
+                    size    31011
+
+supported_archs     noarch

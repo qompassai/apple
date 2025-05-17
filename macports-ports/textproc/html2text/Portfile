@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        grobian html2text 2.2.3 v
+revision            0
+checksums           rmd160  a1b95891eb61f271bc3f5d1478988f2ff0fd0293 \
+                    sha256  859133528b3fd893562e41d84bc1ebc1f9166dd281d0fa8e17e7dd26337f5752 \
+                    size    329841
+
+categories          textproc
+maintainers         {ryandesign @ryandesign} openmaintainer
+license             GPL-2+
+
+description         Utility to convert HTML documents into plain text.
+
+long_description    ${name} is a command line utility, written in C++, \
+                    that converts HTML documents into plain text. Each \
+                    HTML document is loaded from a location indicated \
+                    by a URI or read from standard input, and \
+                    formatted into a stream of plain text characters \
+                    that is written to standard output or into an \
+                    output file. The input URI may specify a remote \
+                    site from which the documents are loaded via the \
+                    Hypertext Transfer Protocol (HTTP).
+
+github.tarball_from releases
+
+depends_lib         port:libiconv
+
+compiler.cxx_standard 2011
+# https://github.com/grobian/html2text/issues/59
+configure.cxxflags-append -std=c++11
+
+test.run            yes
+test.target         check

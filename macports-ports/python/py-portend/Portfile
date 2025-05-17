@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-portend
+version             3.2.0
+revision            0
+
+categories-append   devel
+platforms           {darwin any}
+supported_archs     noarch
+license             BSD
+
+maintainers         {khindenburg @kurthindenburg} openmaintainer
+
+description         TCP port monitoring utilities
+long_description    {*}${description}
+
+homepage            https://pypi.python.org/pypi/${python.rootname}
+
+checksums           rmd160  5f7d079f999821f1b00f49edb57ed9a6532b4ba3 \
+                    sha256  5250a352c19c959d767cac878b829d93e5dc7625a5143399a2a00dc6628ffb72 \
+                    size    10514
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_build-append    port:py${python.version}-setuptools_scm
+    depends_lib-append      port:py${python.version}-tempora
+
+    test.run        yes
+}

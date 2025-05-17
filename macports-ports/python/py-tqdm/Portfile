@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-tqdm
+version             4.66.4
+revision            0
+categories-append   devel
+license             MIT
+supported_archs     noarch
+platforms           {darwin any}
+
+python.versions     37 38 39 310 311 312
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         A Fast, Extensible Progress Meter
+long_description    {*}${description}
+
+homepage            https://github.com/tqdm/tqdm
+
+checksums           rmd160  3ffde3289cc3d15df27737429a7d766b7808362b \
+                    sha256  e4d936c9de8727928f3be6079590e97d9abfe8d39a590be678eb5919ffc186bb \
+                    size    169392
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                        port:py${python.version}-setuptools_scm
+}

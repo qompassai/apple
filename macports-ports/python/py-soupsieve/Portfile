@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-soupsieve
+version             2.5
+revision            0
+license             MIT
+maintainers         {mps @Schamschula} openmaintainer
+description         Soup Sieve is a CSS selector library designed to be used with \
+                    Beautiful Soup 4
+long_description    {*}${description} It aims to provide selecting, matching, and filtering using \
+                    modern CSS selectors. Soup Sieve currently provides selectors from \
+                    the CSS level 1 specifications up through the latest CSS level 4 \
+                    drafts and beyond.
+supported_archs     noarch
+platforms           {darwin any}
+homepage            https://github.com/facelessuser/soupsieve
+
+checksums           rmd160  0355169df3f3a2c5c66af7747dea4afe35565177 \
+                    sha256  5663d5a7b3bfaeee0bc4372e7fc48f9cff4940b3eec54a6451cc5299f1097690 \
+                    size    100943
+
+python.versions     36 37 38 39 310 311 312
+
+
+if {${name} ne ${subport}} {
+    python.pep517           yes
+    python.pep517_backend   hatch
+
+    if {${python.version} == 36} {
+        version     2.3.1
+        revision    0
+
+        python.pep517   no
+
+        checksums   rmd160  ddb88a593f7aae9cbbadc1d7e0506aa3a13fdd37 \
+                    sha256  b8d49b1cd4f037c7082a9683dfa1801aa2597fb11c3a1155b7a5b94829b4f1f9 \
+                    size    107520
+
+        depends_build-append \
+                    port:py${python.version}-setuptools
+    }
+}

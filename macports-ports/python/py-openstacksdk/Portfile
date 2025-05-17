@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-openstacksdk
+version             1.4.0
+maintainers         nomaintainer
+license             Apache-2
+supported_archs     noarch
+platforms           {darwin any}
+
+description         Client library for building applications to work with OpenStack clouds
+long_description    {*}${description}
+homepage            https://docs.openstack.org/openstacksdk/
+checksums           rmd160  3b5edf80fe3d2e667dccacf85d0de85020ae43db \
+                    sha256  3615129edb67c82afbd1a1706e915ffa68e0eebfc99c903c343aac6517dd5858 \
+                    size    1173316
+
+python.versions     38 39 310 311
+
+if {${subport} ne ${name}} {
+    depends_build-append \
+                    port:py${python.version}-pbr
+
+    depends_run-append \
+                    port:py${python.version}-yaml \
+                    port:py${python.version}-appdirs \
+                    port:py${python.version}-requestsexceptions \
+                    port:py${python.version}-jsonpatch \
+                    port:py${python.version}-os-service-types \
+                    port:py${python.version}-keystoneauth1 \
+                    port:py${python.version}-munch \
+                    port:py${python.version}-decorator \
+                    port:py${python.version}-jmespath \
+                    port:py${python.version}-iso8601 \
+                    port:py${python.version}-netifaces \
+                    port:py${python.version}-dogpile-cache \
+                    port:py${python.version}-cryptography \
+                    port:py${python.version}-importlib-metadata
+}

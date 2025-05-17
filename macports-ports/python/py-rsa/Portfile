@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-rsa
+version             4.9
+revision            1
+license             Apache-2
+maintainers         {judaew @judaew} openmaintainer
+
+description         Pure Python RSA implementation
+long_description    {*}${description}.\
+    It supports encryption and decryption, signing and verifying signatures,\
+    and key generation according to PKCS#1 version 1.5. It can be used as a\
+    Python library as well as on the commandline.
+supported_archs     noarch
+platforms           {darwin any}
+
+homepage            https://stuvel.eu/software/rsa/
+
+checksums           rmd160  882305d1cf9b736a3e06b33f77d6e88899453f9f \
+                    sha256  e38464a49c6c85d7f1351b0126661487a7e0a14a50f1675ec50eb34d4f20ef21 \
+                    size    29711
+
+python.versions     38 39 310 311 312
+python.pep517_backend poetry
+
+if {${name} ne ${subport}} {
+    depends_lib-append  port:py${python.version}-asn1
+    depends_test-append port:py${python.version}-mypy
+
+    test.run            yes
+}

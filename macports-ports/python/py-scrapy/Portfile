@@ -1,0 +1,91 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               python 1.0
+PortGroup               select 1.0
+
+name                    py-scrapy
+version                 2.11.2
+revision                0
+# epoch needed due to previous downgrading version
+epoch                   1
+maintainers             {khindenburg @kurthindenburg} openmaintainer
+platforms               {darwin any}
+supported_archs         noarch
+license                 BSD
+
+description             A high-level Web Crawling and Web Scraping framework
+long_description        Scrapy is a high level scraping and web crawling \
+                        framework for writing spiders to crawl and parse web \
+                        pages for all kinds of purposes, from information \
+                        retrieval to monitoring or testing web sites.
+
+homepage                https://scrapy.org/
+
+python.rootname         Scrapy
+set rootname_lower      [string tolower ${python.rootname}]
+# scrapy 2.11.2 named with lowercase
+set distname            ${rootname_lower}-${version}
+
+checksums               rmd160  4461b266fe52080bbc2bd5bdc14810ae627def8f \
+                        sha256  dfbd565384fc3fffeba121f5a3a2d0899ac1f756d41432ca0879933fbfb3401d \
+                        size    1187710
+
+python.versions 38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_lib-append  \
+        port:py${python.version}-twisted \
+        port:py${python.version}-cryptography \
+        port:py${python.version}-cssselect \
+        port:py${python.version}-defusedxml \
+        port:py${python.version}-parsel \
+        port:py${python.version}-openssl \
+        port:py${python.version}-queuelib \
+        port:py${python.version}-service_identity \
+        port:py${python.version}-w3lib \
+        port:py${python.version}-zopeinterface \
+        port:py${python.version}-protego \
+        port:py${python.version}-dispatcher \
+        port:py${python.version}-itemadapter \
+        port:py${python.version}-tldextract \
+        port:py${python.version}-typing_extensions \
+        port:py${python.version}-lxml
+    depends_run-append \
+        port:${rootname_lower}_select
+
+    # 2.6.2 testing using #1 below does work for the most part
+    # 1) sudo port -v test pyXX-scrapy
+    # 2) You can ignore the 'Allow python.app to accept connections' popups
+    # 3) Alternatively, run some basic commands using py-scrapy
+    depends_test-append \
+        port:py${python.version}-pytest-asyncio \
+        port:py${python.version}-botocore \
+        port:py${python.version}-jmespath \
+        port:py${python.version}-pillow \
+        port:py${python.version}-pexpect \
+        port:py${python.version}-sybil \
+        port:py${python.version}-testfixtures \
+        port:py${python.version}-tldextract
+
+    test.run            yes
+
+    # Dependencies:
+    # https://github.com/scrapy/scrapy/blob/e63188cbf753d560e43d8489c821bd6eb9fe54e9/setup.py#L21
+    #
+    # But note that patches add setuptools and remove h2
+    depends_lib-append  \
+        port:py${python.version}-setuptools \
+        port:py${python.version}-itemloaders \
+        port:py${python.version}-itemadapter
+
+    select.group     ${rootname_lower}
+    select.file      ${filespath}/${rootname_lower}-${python.version}
+
+    notes "
+To make the Python ${python.branch} version of scrapy the one that is run\
+when you execute the commands without a version suffix, e.g. 'scrapy', run:
+
+    sudo port select --set ${select.group} [file tail ${select.file}]
+"
+}

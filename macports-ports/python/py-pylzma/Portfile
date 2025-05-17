@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-pylzma
+version             0.5.0
+revision            0
+categories-append   archivers
+license             LGPL-2.1+
+
+python.versions     38 39 310 311
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         Python bindings for the LZMA compression library.
+long_description    {*}${description}
+
+homepage            https://www.joachim-bauch.de/projects/pylzma/
+
+checksums           rmd160  24fc0c2d1e1c8957df99bbe00d125b80502e4ddd \
+                    sha256  b874172afbf37770e643bf2dc9d9b6b03eb95d8f8162e157145b3fe9e1b68a1c \
+                    size    4215481
+
+if {${name} ne ${subport}} {
+    post-destroot {
+        xinstall -m 0644 -W ${worksrcpath} LICENSE README.md doc/USAGE.md \
+            ${destroot}${prefix}/share/doc/${subport}
+    }
+}

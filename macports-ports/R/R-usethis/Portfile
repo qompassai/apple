@@ -1,0 +1,54 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran r-lib usethis 3.0.0 v
+revision            0
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Automate package and project setup
+long_description    {*}${description}
+homepage            https://usethis.r-lib.org
+checksums           rmd160  485e6476c48579a2d6eed2a888e80ab776d0338b \
+                    sha256  98f850f9ceaae37eb16ccd1232275b4e8f818c115c67151fa99096c477f7ccb5 \
+                    size    381410
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-clipr \
+                    port:R-crayon \
+                    port:R-curl \
+                    port:R-desc \
+                    port:R-fs \
+                    port:R-gert \
+                    port:R-gh \
+                    port:R-glue \
+                    port:R-jsonlite \
+                    port:R-lifecycle \
+                    port:R-purrr \
+                    port:R-rappdirs \
+                    port:R-rlang \
+                    port:R-rprojroot \
+                    port:R-rstudioapi \
+                    port:R-whisker \
+                    port:R-withr \
+                    port:R-yaml
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-magick \
+                    port:R-pkgload \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-spelling \
+                    port:R-styler \
+                    port:R-testthat
+
+# There seems to be a problem with R BATCH:
+# https://trac.macports.org/ticket/67059
+# Due to this a chunk of tests fail to run.
+test.run            yes

@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-sphinxcontrib-serializinghtml
+version             1.1.10
+revision            0
+
+categories-append   textproc devel
+platforms           {darwin any}
+supported_archs     noarch
+license             BSD
+maintainers         {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+
+description         sphinx extension which outputs "serialized" HTML files (json and pickle)
+long_description    sphinxcontrib-serializinghtml is a sphinx extension which outputs "serialized" HTML files (json and pickle).
+
+homepage            http://sphinx-doc.org/
+
+checksums           rmd160  408757fecafae8ef294f0b4d41ebf7f161ab3dfa \
+                    sha256  93f3f5dc458b91b192fe10c397e324f262cf163d79f3282c158e8436a2c4511f \
+                    size    15592
+
+python.versions     36 37 38 39 310 311 312
+python.pep517       yes
+
+if {$subport ne $name} {
+    if {${python.version} <= 38} {
+        version     1.1.5
+        revision    0
+        checksums   md5 d99d2edc7b26988dc5fa92163857bfbf \
+                    rmd160 c8e1910f916f8d07d5e87bc433c964634146773f \
+                    sha256 aa5f6de5dfdf809ef505c4895e51ef5c9eac17d0f287933eb49ec495280b6952
+    } else {
+        python.pep517_backend   flit
+        distname    sphinxcontrib_serializinghtml-${version}
+    }
+}

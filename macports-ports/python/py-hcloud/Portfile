@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim: fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-hcloud
+version             1.35.0
+revision            0
+
+supported_archs     noarch
+platforms           {darwin any}
+license             MIT
+maintainers         {judaew @judaew} openmaintainer
+
+description         ${name} is a library for the Hetzner Cloud API.
+long_description    {*}${description}
+homepage            https://github.com/hetznercloud/hcloud-python
+
+checksums           rmd160  30b0013c1e0d8da2d3581490e5d090aa83757965 \
+                    sha256  b1949ab637be517b7af6becdbf840c47722f9471c6b870e6f35de1ef6fcea3e3 \
+                    size    116320
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_run-append \
+                    port:py${python.version}-dateutil \
+                    port:py${python.version}-future \
+                    port:py${python.version}-requests
+
+    depends_test-append \
+                    port:py${python.version}-mock
+
+    test.run        yes
+}

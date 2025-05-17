@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           perl5 1.0
+
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         Sub-Quote 2.006008
+license             {Artistic-1 GPL}
+maintainers         nomaintainer
+description         Sub::Quote - efficient generation of subroutines via string eval
+long_description    ${description}
+
+platforms           {darwin any}
+supported_archs     noarch
+
+checksums           rmd160  d74eda424bc2ddd487ec74f45b9e0b686e7c8a1b \
+                    sha256  94bebd500af55762e83ea2f2bc594d87af828072370c7110c60c238a800d15b2 \
+                    size    35925
+
+if {${perl5.major} != ""} {
+    depends_build-append \
+                    port:p${perl5.major}-test-simple
+
+    depends_lib-append \
+                    port:p${perl5.major}-xstring
+}

@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+github.setup        lilydjwg pssh 2.3.5 v
+name                pssh-lilydjwg
+revision            0
+
+description         Fork of pssh (Parallel SSH) with Python 3 support and \
+                    bugfixes
+
+conflicts           pssh
+
+long_description    {*}${description}
+
+categories          sysutils net
+platforms           {darwin any}
+supported_archs     noarch
+license             BSD
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  66675b5b03cdb7129cd03c688841a7ef0af57a5e \
+                    sha256  bab52114d20a9636c9d7be384da074252b0b3fd7fffd80c6169370b2eb5a3e81 \
+                    size    52390
+
+python.default_version 311
+
+depends_build       port:py${python.default_version}-setuptools
+
+post-destroot {
+    # install man pages
+    xinstall -d "${destroot}${prefix}/share/man/man1"
+    foreach manpage [glob ${worksrcpath}/man/man1/*] {
+        copy ${manpage} ${destroot}${prefix}/share/man/man1/
+    }
+}
