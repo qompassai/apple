@@ -1,8 +1,14 @@
+<!-- /qompassai/apple/README.md -->
+<!-- ---------------------------- -->
+<!-- Copyright (C) 2025 Qompass AI, All rights reserved -->
+
 <h2> Apple: The First Bicycle for the Mind </h2>
 
 <h3> Qompass AI on Apple </h3>
 
 ![Repository Views](https://komarev.com/ghpvc/?username=qompassai-apple)
+![GitHub all releases](https://img.shields.io/github/downloads/qompassai/apple/total?style=flat-square)
+
 
   <a href="https://developer.apple.com/documentation/">
   <img src="https://img.shields.io/badge/Apple_Documentation-blue?style=flat-square" alt="Apple Documentation">
@@ -183,24 +189,6 @@ Where:
 ### A: AI models ~=10 billion(10B) parameters and below. For comparison, OpenAI's GPT4o contains approximately 200B parameters.
 
 </details>
-
-<details id="Zenodo DOI">
-  <summary><strong>Digital Object Identifier (DOI) for public transparency and accountability</strong></summary>
-Badge
-
-
-```markdown
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.xxxxxx.svg)](https://doi.org/10.5281/zenodo.xxxxxx)
-```
-
----
-
-- See `.zenodo.json` for metadata, authorship, licensing, and related software attribution.
-</details>
-
-## 🧭 Attribution
-
-
 
 <details id="Dual-License Notice">
   <summary><strong>What a Dual-License Means</strong></summary>
