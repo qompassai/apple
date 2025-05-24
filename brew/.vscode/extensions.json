@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "Shopify.ruby-lsp",
+    "sorbet.sorbet-vscode-extension",
+    "github.vscode-github-actions",
+    "timonwong.shellcheck",
+    "foxundermoon.shell-format",
+    "davidanson.vscode-markdownlint",
+    "editorconfig.editorconfig"
+  ]
+}
