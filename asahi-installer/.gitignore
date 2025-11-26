@@ -1,9 +1,0 @@
-__pycache__
-dl
-package
-*.tar.gz
-latest
-*.ipsw
-*.egg-info
-build
-dist

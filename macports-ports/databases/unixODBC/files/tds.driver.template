@@ -1,4 +1,0 @@
-[TDS]
-Description		= TDS ODBC Driver
-Driver			= __PREFIX__/lib/libtdsodbc.so
-Setup			= __PREFIX__/lib/libtdsS.so
