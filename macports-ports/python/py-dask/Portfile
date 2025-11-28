@@ -1,0 +1,50 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-dask
+version             2024.4.1
+revision            0
+categories-append   devel
+license             BSD
+supported_archs     noarch
+platforms           {darwin any}
+
+python.versions     39 310 311 312
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         Minimal task scheduling abstraction.
+
+long_description    Dask provides multi-core execution on larger-than-memory \
+                    datasets using blocked algorithms and task scheduling. \
+                    It maps high-level NumPy, Pandas, and list operations on \
+                    large datasets on to many operations on small in-memory \
+                    datasets. It then executes these graphs in parallel on a \
+                    single machine. Dask lets us use traditional NumPy, \
+                    Pandas, and list programming while operating on \
+                    inconveniently large data in a small amount of space.
+
+homepage            https://github.com/dask/dask/
+
+checksums           rmd160  c23858962cff7cfe46e9b76f5ea842bf7a23b6cc \
+                    sha256  6cd8eb03ddc8dc08d6ca5b167b8de559872bc51cc2b6587d0e9dc754ab19cdf0 \
+                    size    9337972
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                        port:py${python.version}-versioneer
+
+    depends_lib-append  port:py${python.version}-click \
+                        port:py${python.version}-cloudpickle \
+                        port:py${python.version}-fsspec \
+                        port:py${python.version}-packaging \
+                        port:py${python.version}-partd \
+                        port:py${python.version}-toolz \
+                        port:py${python.version}-yaml
+
+    if {${python.version} < 312} {
+        depends_lib-append  port:py${python.version}-importlib-metadata
+    }
+}

@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-deap
+version             1.4.1
+revision            0
+categories-append   devel
+license             LGPL
+
+python.versions     38 39 310 311 312
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         Distributed Evolutionary Algorithms in Python
+
+long_description    DEAP stands for Distributed Evolutionary Algorithm \
+                    in Python, it is dedicated to people who wish to learn \
+                    how to use evolutionary algorithms and to those who wish \
+                    to rediscover evolutionary algorithms.
+
+homepage            https://github.com/deap
+
+checksums           rmd160  ac453c81f16d76a9a3b99b7faf5c4d8205d8da8c \
+                    sha256  cc01de9892dfa7d1bc9803dab28892fead177f0182c81db47360a240ead778ff \
+                    size    1069747
+
+if {${name} ne ${subport}} {
+    depends_lib-append  port:py${python.version}-numpy
+}

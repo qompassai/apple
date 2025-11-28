@@ -1,0 +1,50 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+github.setup        xonsh xonsh 0.18.2
+revision            0
+categories          shells
+supported_archs     noarch
+platforms           {darwin any}
+maintainers         {mps @Schamschula} openmaintainer
+license             Permissive
+
+description         Xonsh is a Python-ish, BASHwards-looking shell language \
+                    and command prompt.
+
+long_description    {*}${description} \
+                    The language is a superset of Python 3.4+ with additional \
+                    shell primitives that you are used to from Bash and \
+                    IPython. It works on all major systems including Linux, \
+                    macOS, and Windows. Xonsh is meant for the daily use of \
+                    experts and novices alike.
+
+checksums           rmd160  1e660ff9b2309099ab6023b5102afd9f2bbe1a07 \
+                    sha256  ae3a16ad03704e610a4460b38f095beb366e5edcf74cb06ec230a8b9f32aa58f \
+                    size    12749343
+
+variant python38 conflicts python39 python310 python311 python312 description {Use Python 3.8} {}
+variant python39 conflicts python38 python310 python311 python312 description {Use Python 3.9} {}
+variant python310 conflicts python38 python39 python311 python312 description {Use Python 3.10} {}
+variant python311 conflicts python38 python39 python310 python312 description {Use Python 3.11} {}
+variant python312 conflicts python38 python39 python310 python311 description {Use Python 3.12} {}
+
+if {![variant_isset python38] && ![variant_isset python39] && ![variant_isset python310] && ![variant_isset python310]} {
+        default_variants +python312
+}
+
+foreach pv {312 311 310 39 38} {
+    if {[variant_isset python${pv}]} {
+        python.default_version ${pv}
+        break
+    }
+}
+
+python.pep517       yes
+
+depends_lib-append  port:py${python.version}-prompt_toolkit \
+                    port:py${python.version}-pygments \
+                    port:py${python.version}-gnureadline

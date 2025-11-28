@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           perl5 1.0
+
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         YAML-LibYAML 0.89
+revision            0
+license             {Artistic-1 GPL}
+maintainers         nomaintainer
+description         YAML::LibYAML - Perl YAML Serialization using XS and libyaml
+long_description    {*}${description}
+
+platforms           darwin
+
+checksums           rmd160  4beec1a411be495b18318fc1bc902c16b894ce6b \
+                    sha256  155ab83675345c50add03311acf9dd915955707f909a2abd8b17d7792859b2ec \
+                    size    153478
+
+# builds using embedded libyaml 0.2.4 source, no dependencies required

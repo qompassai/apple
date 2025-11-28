@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           compiler_blacklist_versions 1.0
+PortGroup           github 1.0
+
+github.setup        catchorg Catch2 3.5.2 v
+github.tarball_from archive
+name                catch2
+revision            0
+
+categories          devel
+license             Boost-1
+maintainers         {gmail.com:howarth.at.macports @jwhowarth} openmaintainer
+
+description         Catch 2: a modern, C++-native, header-only, test framework for unit-tests
+long_description    ${description}, TDD and BDD - using C++14, C++17 and later.
+
+checksums           rmd160  d711022fe9a29886f1797175fab3b165ffcc16a5 \
+                    sha256  269543a49eb76f40b3f93ff231d4c24c27a7e16c90e47d2e45bcc564de470c6e \
+                    size    1159985
+
+compiler.cxx_standard 2014
+
+# Old clangs apparently have trouble with std::is_constructible.
+# https://github.com/catchorg/Catch2/issues/1935
+# https://github.com/catchorg/Catch2/issues/946
+compiler.blacklist-append   {clang < 700}
+
+github.livecheck.regex  {([0-9.]+)}

@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-jsonpickle
+version             3.0.2
+revision            0
+
+categories-append   textproc
+supported_archs     noarch
+platforms           {darwin any}
+license             BSD
+maintainers         nomaintainer
+
+description         Python library for serializing any arbitrary \
+                    object graph into JSON.
+long_description    {*}${description} It can take almost any Python \
+                    object and turn the object into JSON. Additionally, \
+                    it can reconstitute the object back into Python.
+
+homepage            https://jsonpickle.github.io
+
+checksums           rmd160  5b2052b9f7412fb05a2e7f1fd5d84c0525bbe285 \
+                    sha256  e37abba4bfb3ca4a4647d28bb9f4706436f7b46c8a8333b4a718abafa8e46b37 \
+                    size    266361
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    python.pep517   yes
+
+    depends_build-append \
+                    port:py${python.version}-setuptools_scm
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} README.rst CHANGES.rst \
+            LICENSE ${destroot}${docdir}
+    }
+}

@@ -1,0 +1,63 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                xmlrpc-c
+version             1.51.08
+revision            0
+categories          devel www
+# tools/turbocharger is Apache-1
+license             BSD MIT Apache-1
+platforms           darwin
+maintainers         nomaintainer
+
+description         Lightweight RPC library based on XML and HTTP
+
+long_description    XML-RPC is a quick-and-easy way to make procedure calls \
+                    over the Internet. It converts the procedure call into \
+                    XML document, sends it to a remote server using HTTP, and \
+                    gets back the response as XML. \
+                    This library provides a modular implementation of XML-RPC \
+                    for C and C++.
+
+homepage            http://xmlrpc-c.sourceforge.net/
+master_sites        sourceforge:project/xmlrpc-c/Xmlrpc-c%20Super%20Stable/${version}
+
+checksums           rmd160  575bfddc44f958b10f9b42a15d559e25715b3907 \
+                    sha256  a48f6becfdc2897b8a90522ec506000f966a75e4a7c348c3f8b18fce828d49e6 \
+                    size    933148
+
+# latest release is does not have the "-c" suffix; check for next update
+distname            xmlrpc-${version}
+
+extract.suffix      .tgz
+
+depends_build       port:pkgconfig
+
+depends_lib         path:lib/libssl.dylib:openssl \
+                    port:curl
+
+configure.args-append --disable-libwww-client --without-libwww-ssl
+
+platform darwin {
+    patchfiles-append patch-strcasecmp.diff
+    patch.pre_args-replace  -p0 -p1
+}
+
+default_variants +libxml2
+
+variant libxml2 description {Use libxml2 instead of built-in expat} {
+    depends_lib-append      port:libxml2
+    configure.args-append   --enable-libxml2-backend
+}
+
+variant libwww description {Build libwww client transport} {
+    depends_lib-append      port:libwww
+    configure.args-delete   --disable-libwww-client --without-libwww-ssl
+}
+
+test.run            yes
+test.target         check
+
+livecheck.type      sourceforge
+livecheck.regex     /${name}-(\[0-9.\]+)${extract.suffix}

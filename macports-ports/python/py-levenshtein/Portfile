@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+PortGroup           compiler_wrapper 1.0
+
+name                py-levenshtein
+python.rootname     Levenshtein
+version             0.25.1
+revision            0
+categories-append   textproc
+platforms           darwin freebsd
+license             GPL-2+
+
+python.versions     38 39 310 311 312
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         Python module for fast computation of Levensthein distances.
+
+long_description    The Levenshtein Python C extension module contains \
+                    functions for fast computation of Levenshtein (edit) \
+                    distance, and edit operations, string similarity, \
+                    approximate median strings, and generally string \
+                    averaging, string sequence and set similarity. It \
+                    supports both normal and Unicode strings.
+
+homepage            https://github.com/maxbachmann/Levenshtein
+
+checksums           rmd160  0591635ea30d7fd708a3d0e8f974c1209ca5f954 \
+                    sha256  2df14471c778c75ffbd59cb64bbecfd4b0ef320ef9f80e4804764be7d5678980 \
+                    size    149954
+
+if {${name} ne ${subport}} {
+    compiler.cxx_standard 2017
+    depends_build-append \
+                        port:py${python.version}-scikit-build
+    depends_run-append  port:py${python.version}-rapidfuzz
+}

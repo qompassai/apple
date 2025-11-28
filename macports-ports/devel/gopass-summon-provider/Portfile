@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/gopasspw/gopass-summon-provider 1.15.14 v
+go.offline_build    no
+github.tarball_from archive
+revision            0
+categories          devel
+maintainers         {@0x1DA117 danieltrautmann.com:me} \
+                    {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+license             MIT
+
+description         Gopass Summon Provider
+
+long_description    Use gopass as secret provider for summon.
+
+checksums           rmd160  ff451e7bb785b86ae46dfc8a7cf158db8e2ee5a4 \
+                    sha256  a208f94067411c55a0636d902ea42a2449e690ef27ed5adad9bf2cb98bf4cdde \
+                    size    16307
+
+build.cmd           ${go.bin} mod tidy \&\& ${go.bin} build
+build.args          -o ${worksrcpath}/${name} \
+                    -trimpath \
+                    -ldflags \" \
+                        -s \
+                        -w \
+                        -X main.version=${version} \
+                    \" \
+                    -gcflags \" \
+                        -trimpath=${gopath} \
+                    \" \
+                    -asmflags \" \
+                        -trimpath=${gopath} \
+                    \"
+
+build.env-append    CGO_ENABLED=0
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
+}

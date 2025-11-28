@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-aiojobs
+version             1.3.0
+license             Apache-2
+supported_archs     noarch
+platforms           {darwin any}
+maintainers         {toby @tobypeterson} openmaintainer
+description         Jobs scheduler for managing background task
+long_description    Jobs scheduler for managing background task (asyncio). The \
+                    library gives controlled way for scheduling background tasks \
+                    for asyncio applications.
+
+homepage            https://github.com/aio-libs/aiojobs
+
+checksums           rmd160  8c5ebcf46da588192ef54d22b0ec656512ec5e49 \
+                    sha256  03074c884b3dc388b8d798c0de24ec17d72b2799018497fda8062c0431a494b5 \
+                    size    138950
+
+python.versions     38 39 310 311 312
+
+python.pep517       yes
+
+if {${name} ne ${subport}} {
+    depends_lib-append      port:py${python.version}-aiohttp \
+
+    if {${python.version} < 311} {
+        depends_lib-append  port:py${python.version}-async-timeout
+    }
+
+    livecheck.type  none
+}

@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-txaio
+version             22.2.1
+revision            0
+checksums           rmd160  ce69a794e9605d1afab3b9a77d61fbbc1ee2bb21 \
+                    sha256  2e4582b70f04b2345908254684a984206c0d9b50e3074a24a4c55aba21d24d01 \
+                    size    53645
+
+maintainers         nomaintainer
+license             MIT
+supported_archs     noarch
+platforms           {darwin any}
+
+description         Compatibility API between asyncio/Twisted/Trollius
+long_description    txaio is a helper library for writing code that runs \
+                    unmodified on both Twisted and asyncio / Trollius.
+
+homepage            https://github.com/crossbario/txaio
+
+python.versions     38 39 310 311

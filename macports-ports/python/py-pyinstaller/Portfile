@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-pyinstaller
+version             6.4.0
+revision            0
+
+checksums           rmd160  644c4d043f2f2760b58cc2ca3303004e8d2cc2b9 \
+                    sha256  1bf608ed947b58614711275a7ff169289b32560dc97ec748ebd5fa8bdec80649 \
+                    size    4153699
+
+supported_archs     noarch
+platforms           {darwin any}
+maintainers         openmaintainer {adfernandes @adfernandes}
+description         converts (packages) Python programs into stand-alone executables
+long_description    {*}${description} - note that there is a GPL license exception that allows \
+                    PyInstaller to build and distribute non-free programs, including commercial ones.
+license             GPL-2+
+
+homepage            https://www.pyinstaller.org/
+
+python.versions     312

@@ -1,0 +1,87 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       cmake 1.1
+PortGroup       github 1.0
+PortGroup       boost 1.0
+PortGroup       java 1.0
+
+github.setup    28msec zorba 3.1
+revision        13
+license         Apache-2
+categories      textproc devel
+maintainers     nomaintainer
+description     The XQuery Processor
+
+long_description \
+    Zorba is a general purpose XQuery processor implementing in C++ the W3C \
+    family of specifications. It is not an XML database. The query processor \
+    has been designed to be embeddable in a variety of environments such as \
+    other programming languages extended with XML processing capabilities, \
+    browsers, database servers, XML message dispatchers, or smartphones. Its \
+    architecture employes a modular design, which allows customizing the Zorba \
+    query processor to the environment’s needs. In particular the architecture \
+    of the query processor allows a pluggable XML store (e.g. main memory, DOM \
+    stores, persistent disk-based large stores, S3 stores).
+
+homepage        http://www.zorba.io/home
+
+# stealth update; remove for next version
+dist_subdir     ${name}/${version}_1
+checksums       rmd160  1c35dee93bf2b38e2a617fec6c80ee0227814913 \
+                sha256  3b85e57af976b1a466d7db4afec761345f57f6fbb50455f480ddc918c9c0a5f8 \
+                size    12423090
+
+
+java.version    1.8+
+java.fallback   openjdk11
+
+# In-source builds are not allowed
+cmake.out_of_source yes
+
+patchfiles      patch-src-types-schema-SchemaValidatorFilter.h.diff \
+                patch-icu68.diff
+
+depends_build-append \
+    port:bison \
+    port:flex
+
+depends_lib \
+    port:curl \
+    port:fop \
+    port:geos \
+    path:lib/pkgconfig/icu-uc.pc:icu \
+    port:libarchive \
+    port:libiconv \
+    port:libxml2 \
+    port:libxslt \
+    port:sqlite3 \
+    port:tidy \
+    port:xercesc3
+
+# External modules not installed:
+#   port:ImageMagick    - image         skip this, creates too big .mpkg files
+#                       - schema-tools  xmlbeans port not available
+#                       - read-pdf      fontbox port not available
+#   port:cclient        - email         breaks zorba build
+
+# Dependencies for external modules
+#    port:cclient       - email
+#    port:geos          - geo
+#    port:libarchive    - archive
+#    port:libxslt       - language/xslt
+#    port:fop           - xsl-fo
+
+configure.args-append \
+    -DCURL_FOUND=YES \
+    -DCURL_INCLUDE_DIR=${prefix}/include \
+    -DCURL_LIBRARY=${prefix}/lib/libcurl.dylib \
+    -DZORBA_XQUERYX=YES
+
+# required for ICU
+compiler.cxx_standard     2011
+configure.cppflags-append -DU_USING_ICU_NAMESPACE=1
+configure.cxxflags-append -std=c++11
+
+test.env DYLD_LIBRARY_PATH=${worksrcpath}/src
+test.run yes

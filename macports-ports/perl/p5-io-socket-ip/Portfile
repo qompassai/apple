@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           perl5 1.0
+
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         IO-Socket-IP 0.42
+license             {Artistic-1 GPL}
+maintainers         nomaintainer
+description         IO::Socket::IP - Family-neutral IP socket supporting both IPv4 and IPv6
+long_description    {*}${description}
+
+platforms           {darwin any}
+supported_archs     noarch
+
+checksums           rmd160  afbf1b382978f399d6dcbb68d869a16aea787309 \
+                    sha256  f97a3846c50a4e0658ce1722ce7cc2acad9472e70478bfbe9c794fb1db6a6b13 \
+                    size    45124
+
+if {${perl5.major} != ""} {
+    depends_lib-append \
+                    port:p${perl5.major}-socket
+
+    perl5.use_module_build
+}

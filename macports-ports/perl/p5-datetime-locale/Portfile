@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           perl5 1.0
+
+epoch               1
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         DateTime-Locale 1.43 ../../authors/id/D/DR/DROLSKY
+revision            0
+license             {Artistic-1 GPL}
+maintainers         nomaintainer
+description         Localization support for DateTime
+long_description    DateTime::Locale is primarily a factory for the \
+                    various locale subclasses. It also provides some \
+                    functions for getting information on available \
+                    locales. If you want to know what methods are \
+                    available for locale objects, then please read the \
+                    DateTime::Locale::Base documentation.
+
+platforms           {darwin any}
+supported_archs     noarch
+
+checksums           rmd160  ef6bbdf66514d8d78ecffde54c1f6fd446ece1df \
+                    sha256  6c859c17cf274749dfc2c6aaf6bf4b492b605fabdddd23712efbbd5caf601de1 \
+                    size    2003421
+
+if {${perl5.major} != ""} {
+    depends_build-append \
+                    port:p${perl5.major}-cpan-meta-check \
+                    port:p${perl5.major}-file-sharedir-install \
+                    port:p${perl5.major}-ipc-system-simple \
+                    port:p${perl5.major}-path-tiny \
+                    port:p${perl5.major}-test2-plugin-nowarnings \
+                    port:p${perl5.major}-test-file-sharedir \
+                    port:p${perl5.major}-test-simple
+
+    depends_lib-append \
+                    port:p${perl5.major}-file-sharedir \
+                    port:p${perl5.major}-dist-checkconflicts \
+                    port:p${perl5.major}-namespace-autoclean \
+                    port:p${perl5.major}-params-validationcompiler \
+                    port:p${perl5.major}-specio
+}

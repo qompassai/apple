@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-robotframework
+
+version             4.1.2
+license             Apache-2
+
+categories-append   devel
+maintainers         {jwa @jyrkiwahlstedt} openmaintainer
+description         ATDD framework
+long_description    ATDD framework with plugins
+
+homepage            http://robotframework.org/
+
+
+use_zip             yes
+
+platforms           {darwin any}
+supported_archs     noarch
+python.versions     27 38 39
+
+checksums           rmd160  94087ed931b8a6bdcd71dcc0ed4b0849832585c3 \
+                    sha256  7ea2454b847cfcb211e2906743c5c4a868ab096ab4ce1547ab102d91fb224443 \
+                    size    694730
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-setuptools
+
+    post-destroot {
+        reinplace "s;${destroot};;" ${destroot}${python.prefix}/bin/robot
+        reinplace "s;${destroot};;" ${destroot}${python.prefix}/bin/rebot
+    }
+}

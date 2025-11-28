@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-npe2
+version             0.7.7
+revision            0
+license             BSD
+maintainers         {mps @Schamschula} openmaintainer
+description         napari plugin refactor
+long_description    {*}${description}
+supported_archs     noarch
+platforms           {darwin any}
+homepage            https://github.com/napari/npe2
+
+checksums           rmd160  586ae959ef01a6ffc4bf936466b9da20a0a2ba84 \
+                    sha256  8e5e3ef3b2ea020c9b8bb31c589148f0fd486779a939b52e4f3c7fea422a9136 \
+                    size    117533
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    python.pep517   yes
+    python.pep517_backend \
+                    hatch
+
+    depends_build-append \
+                    port:py${python.version}-hatch-vcs
+
+    depends_lib-append  \
+                    port:py${python.version}-appdirs \
+                    port:py${python.version}-magicgui \
+                    port:py${python.version}-psygnal \
+                    port:py${python.version}-pydantic \
+                    port:py${python.version}-pydantic-compat \
+                    port:py${python.version}-pytomlpp \
+                    port:py${python.version}-rich \
+                    port:py${python.version}-typer \
+                    port:py${python.version}-yaml
+}

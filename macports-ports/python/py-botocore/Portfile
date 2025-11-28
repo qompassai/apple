@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-botocore
+version             1.34.148
+revision            0
+
+supported_archs     noarch
+platforms           {darwin any}
+license             Apache-2
+maintainers         {judaew @judaew} \
+                    {emcrisostomo @emcrisostomo} openmaintainer
+
+description         Low level data driven core of boto 3.
+long_description    A low-level interface to a growing number of Amazon Web \
+                    Services.  The botocore package is the foundation for the \
+                    AWS CLI as well as boto3.
+
+homepage            https://github.com/boto/botocore
+
+checksums           rmd160  266f5a1022a62a8c2a65a5ed466aeea3a69533a8 \
+                    sha256  258dd95570b43db9fa21cce5426eabaea5867e3a61224157650448b5019d1bbd \
+                    size    12631317
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_lib-append \
+                    port:py${python.version}-dateutil \
+                    port:py${python.version}-jmespath \
+                    port:py${python.version}-urllib3
+
+    test.run        yes
+    python.test_framework
+    test.cmd        ${python.bin} -c
+    test.target     \"import botocore\"
+}

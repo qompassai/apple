@@ -1,0 +1,17 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mmaechler bitops 1.0-8
+revision            0
+maintainers         nomaintainer
+license             GPL-2+
+description         Functions for bitwise operations on integer vectors
+long_description    {*}${description}
+homepage            https://github.com/mmaechler/R-bitops
+checksums           rmd160  f9ff153b6d4fa7f52fc943cd1cfa9630d4e42cc3 \
+                    sha256  78a14b9f69645dc65e1973e1f1a9968c53d5c5edc6aa1ac85661e1112f212738 \
+                    size    10915
+
+test.run            yes

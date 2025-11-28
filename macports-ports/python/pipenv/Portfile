@@ -1,0 +1,56 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                pipenv
+version             2023.12.1
+revision            0
+categories-append   devel
+platforms           {darwin any}
+license             MIT
+supported_archs     noarch
+
+maintainers         {danchr @danchr} openmaintainer
+
+description         The officially recommended Python packaging tool.
+
+long_description    {*}${description} \
+                    Pipenv -- Python Dev Workflow for Humans -- is a \
+                    tool that aims to bring the best of \
+                    all packaging worlds (bundler, composer, npm, \
+                    cargo, yarn, etc.) to the Python world. Windows is \
+                    a first-class citizen, in our world. \
+                    \
+                    \n\nIt automatically creates and manages a virtualenv \
+                    for your projects, as well as adds/removes \
+                    packages from your Pipfile as you \
+                    install/uninstall packages. It also generates the \
+                    ever-important Pipfile.lock, which is used to \
+                    produce deterministic builds.
+
+homepage            https://pipenv.pypa.io/en/latest/
+
+checksums           rmd160  7015b86790f511fac86c4f5b4d2f254b72f8dabc \
+                    sha256  4aea73e23944e464ad2b849328e780ad121c5336e1c24a7ac15aa493c41c2341 \
+                    size    4538942
+
+python.default_version 312
+
+depends_lib-append port:py${python.version}-certifi \
+                   port:py${python.version}-virtualenv
+
+post-destroot {
+    xinstall -m 0644 \
+        ${destroot}${python.pkgd}/${name}/${name}.1 \
+        ${destroot}${prefix}/share/man/man1
+
+    delete ${destroot}${python.pkgd}/docs
+    delete ${destroot}${python.pkgd}/examples
+}
+
+test.run            yes
+python.test_framework
+test.cmd            pipenv
+test.target         install
+test.args           pip

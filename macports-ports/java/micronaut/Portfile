@@ -1,0 +1,93 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       github 1.0
+
+github.setup    micronaut-projects micronaut-starter 4.5.1 v
+revision        0
+name            micronaut
+categories      java
+platforms       {darwin any}
+maintainers     {breun.nl:nils @breun} openmaintainer
+license         Apache-2
+supported_archs x86_64 arm64
+universal_variant no
+
+description     Micronaut is a modern, JVM-based, full-stack framework \
+                for building modular, easily testable microservice and \
+                serverless applications.
+
+long_description Micronaut is a modern, JVM-based, full stack Java framework \
+                designed for building modular, easily testable JVM \
+                applications with support for Java, Kotlin and the Groovy \
+                language. \
+                \n\
+                \nMicronaut is developed by the creators of the Grails \
+                framework and takes inspiration from lessons learnt over the \
+                years building real-world applications from monoliths to \
+                microservices using Spring, Spring Boot and Grails. \
+                \n\
+                \nMicronaut aims to provide all the tools necessary to build \
+                microservice applications including: \
+                \n\
+                \n* Dependency Injection and Inversion of Control (IoC) \
+                \n* Aspect Oriented Programming (AOP) \
+                \n* Sensible Defaults and Auto-Configuration \
+                \n\
+                \nWith Micronaut you can build Message-Driven Applications, \
+                Command Line Applications, HTTP Servers and more whilst for \
+                Microservices in particular Micronaut also provides: \
+                \n* Distributed Configuration \
+                \n* Service Discovery \
+                \n* HTTP Routing \
+                \n* Client-Side Load Balancing \
+                \n\
+                \nAt the same time Micronaut aims to avoid the downsides of \
+                frameworks like Spring, Spring Boot and Grails by providing: \
+                \n\
+                \n* Fast startup time \
+                \n* Reduced memory footprint \
+                \n* Minimal use of reflection \
+                \n* Minimal use of proxies \
+                \n* No runtime bytecode generation \
+                \n* Easy Unit Testing
+
+homepage        https://micronaut.io
+github.tarball_from releases
+
+if {${configure.build_arch} eq "x86_64"} {
+    distname     mn-darwin-amd64-v${version}
+    checksums    rmd160  942cf73fc1205c38d1820e87ce5cc780b9994ab5 \
+                 sha256  f6db0efc82fc0dfd92af09143ce26f76d4e7c8cee964959f9284e850cc4aaf45 \
+                 size    27174236
+} elseif {${configure.build_arch} eq "arm64"} {
+    distname     mn-darwin-aarch64-v${version}
+    checksums    rmd160  3562dbe4e62bee7b5448769730dda3cc12b4c8a7 \
+                 sha256  b6e4871f0c7e95f08fa44fe340dc4323b60e86d8aed06abd6d8fc09cacaebde6 \
+                 size    26877853
+}
+
+use_zip         yes
+use_configure   no
+
+build {}
+
+test.run    yes
+test.cmd    bin/mn
+test.target
+test.args   --version
+
+destroot {
+    set target ${destroot}${prefix}/share/java/${name}
+
+    # Create the target java directory
+    xinstall -m 755 -d ${target}
+
+    # Copy over the needed elements of our directory tree
+    foreach d { LICENSE bin } {
+        copy ${worksrcpath}/${d} ${target}
+    }
+
+    # Add symlink to the binary
+    ln -s ../share/java/${name}/bin/mn ${destroot}${prefix}/bin
+}

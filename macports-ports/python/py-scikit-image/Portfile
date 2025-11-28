@@ -1,0 +1,69 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-scikit-image
+python.rootname     scikit_image
+version             0.22.0
+revision            0
+categories-append   science
+license             BSD
+
+python.versions     38 39 310 311 312
+python.pep517_backend   meson
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         Image processing algorithms for SciPy.
+
+long_description    Image processing algorithms for SciPy, including IO, \
+                    morphology, filtering, warping, color manipulation, \
+                    object detection, etc.
+
+homepage            https://scikit-image.org/
+
+checksums           md5 91dbff8962b4231ca0a9666f43c0d71f \
+                    rmd160 fb8347226da3f17fd149414ce0aeaf93d43993e9 \
+                    sha256 018d734df1d2da2719087d15f679d19285fce97cd37695103deadfaef2873236 \
+                    size   22685018
+
+if {${name} ne ${subport}} {
+    compiler.openmp_version 2.5
+
+    depends_build-append \
+                        path:bin/cython-${python.branch}:py${python.version}-cython \
+                        port:py${python.version}-pythran
+
+    depends_lib-append  port:py${python.version}-lazy_loader \
+                        port:py${python.version}-numpy \
+                        port:py${python.version}-packaging \
+                        port:py${python.version}-scipy
+
+    depends_run-append  port:py${python.version}-matplotlib \
+                        port:py${python.version}-networkx \
+                        port:py${python.version}-Pillow \
+                        port:py${python.version}-imageio \
+                        port:py${python.version}-pywavelets \
+                        port:py${python.version}-tifffile
+
+    post-patch {
+        reinplace "s|#!/usr/bin/env python|#!/usr/bin/env python3|" \
+            {*}[glob -directory ${worksrcpath}/skimage/_build_utils {[a-z]*.py}]
+    }
+
+    if {${python.version} == 38} {
+        version             0.21.0
+        revision            0
+        checksums           md5 de3b2910a7f3f3b239111fee4f31eaf1 \
+                            rmd160 7566fecf15bbe02f0015c4c664afac59fb049ff8 \
+                            sha256 b33e823c54e6f11873ea390ee49ef832b82b9f70752c8759efd09d5a4e3d87f0
+        patchfiles-append   pyproject.toml-0.21.0.diff
+    } else {
+        patchfiles-append   patch-pyproject.toml.diff
+    }
+
+    build.env-append        PATH=${python.prefix}/bin:$::env(PATH)
+
+    livecheck.type          none
+}

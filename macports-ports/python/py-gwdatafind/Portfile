@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-gwdatafind
+version             1.0.5
+revision            0
+
+categories-append   science
+platforms           {darwin any}
+supported_archs     noarch
+maintainers         nomaintainer
+license             GPL-3+
+
+description         The client library for the LIGO Data Replicator (LDR) \
+                    service.
+long_description    The DataFind service allows users to query for the \
+                    location of Gravitational-Wave Frame (GWF) files \
+                    containing data from the current gravitational-wave \
+                    detectors.
+homepage            https://gwdatafind.readthedocs.io
+
+checksums           rmd160  74afffe58bf9e6fa4b4ac930832de2a46e71a099 \
+                    sha256  4675b5b88443c7f2c228f99ac13fce0565ab6b2d40900663961ecf4fb5727c8f \
+                    size    34362
+
+python.versions     38
+
+if {${name} ne ${subport}} {
+    depends_lib-append \
+                    port:py${python.version}-six \
+                    port:py${python.version}-ligo-segments \
+                    port:py${python.version}-openssl
+}

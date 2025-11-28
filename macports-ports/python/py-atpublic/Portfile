@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-atpublic
+version             2.3
+categories-append   devel
+platforms           {darwin any}
+supported_archs     noarch
+license             Apache-2
+
+python.versions     38 39
+
+maintainers         {danchr @danchr} openmaintainer
+
+description         @public decorator for Python
+long_description    A very simple decorator and function which \
+                    populates a module's __all__ and optionally the \
+                    module globals.
+
+homepage            https://public.readthedocs.io
+
+checksums           rmd160  08c9ea0c688b874551c0370ce10068f5ddfe96e4 \
+                    sha256  d6b9167fc3e09a2de2d2adcfc9a1b48d84eab70753c97de3800362e1703e3367 \
+                    size    16746
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-setuptools
+
+    livecheck.type  none
+}

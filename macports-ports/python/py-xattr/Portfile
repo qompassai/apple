@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-xattr
+version             1.1.0
+license             {MIT PSF}
+platforms           darwin linux
+maintainers         {danchr @danchr} openmaintainer
+description         Python wrapper for extended filesystem attributes
+long_description    xattr is a Python wrapper for Darwin, Linux, and FreeBSD \
+                    extended filesystem attributes. Extended attributes \
+                    extend the basic attributes of files and directories in \
+                    the file system. They are stored as name:data pairs \
+                    associated with file system objects (files, directories, \
+                    symlinks, etc). Extended attributes are available on \
+                    Darwin 8.0 and later. This corresponds to Mac OS X 10.4 \
+                    (Tiger) and later.
+
+homepage            https://undefined.org/python/#xattr
+
+checksums           rmd160  560915916b2e80414f7172dae9cf04506f9ee49a \
+                    sha256  fecbf3b05043ed3487a28190dec3e4c4d879b2fcec0e30bafd8ec5d4b6043630 \
+                    size    16634
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_build       port:py${python.version}-setuptools
+    depends_lib-append  port:py${python.version}-cffi
+
+    test.run            yes
+    test.cmd            ${python.bin} setup.py
+}

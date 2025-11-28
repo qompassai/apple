@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim: fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-lazy_object_proxy
+python.rootname     lazy-object-proxy
+version             1.10.0
+revision            0
+license             BSD
+platforms           darwin
+
+python.versions     38 39 310 311 312
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         A fast and thorough lazy object proxy.
+long_description    {*}${description}
+
+homepage            https://github.com/ionelmc/python-lazy-object-proxy
+
+checksums           rmd160  2dd90fb77dfb2bfb73bbed6080563ac32fb619ad \
+                    sha256  78247b6d45f43a52ef35c25b5581459e85117225408a4128a3daf8bf9648ac69 \
+                    size    43271
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                        port:py${python.version}-setuptools_scm
+
+    depends_test-append \
+                        port:py${python.version}-pytest-benchmark
+
+    test.run            yes
+}

@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           muniversal 1.0
+PortGroup           legacysupport 1.1
+PortGroup           cgit 1.0
+
+# stpncpy
+legacysupport.newest_darwin_requires_legacy 10
+
+cgit.setup          git.kernel.org/pub/scm/utils/dash/ dash 0.5.12 v
+revision            1
+
+categories          shells
+license             GPL-2+
+maintainers         {@Synss gmail.com:Mathias.Laurin+macports} openmaintainer
+description         descendant of the NetBSD version of ash
+long_description    DASH is a direct descendant of the NetBSD version of ash \
+                    (the Almquist SHell) and is POSIX compliant.
+
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+checksums           rmd160  279c610c73f3cf4cc20a7cb43d3289a2a86140fc \
+                    sha256  691981ae894d7b4374e5b9a90efb0ae54942513c4abf1cb298b5defcf7bf5922 \
+                    size    168823
+
+autoconf.cmd        ./autogen.sh
+
+configure.args      --disable-silent-rules --with-libedit
+
+use_autoconf        yes
+
+depends_build-append \
+                    port:autoconf \
+                    port:automake \
+                    port:libtool
+
+depends_lib-append  port:libedit

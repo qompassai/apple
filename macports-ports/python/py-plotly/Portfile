@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-plotly
+version             5.23.0
+revision            0
+
+categories          python graphics
+platforms           {darwin any}
+supported_archs     noarch
+license             MIT
+maintainers         {nist.gov:joe.fowler @joefowler} openmaintainer
+
+description         Interactive graphing library for Python.
+long_description \
+    Plotly's Python graphing library makes interactive, publication-quality graphs. Examples of how to \
+    make line plots, scatter plots, area charts, bar charts, error bars, box plots, histograms, \
+    heatmaps, subplots, multiple-axes, polar charts, and bubble charts.
+
+homepage            https://plotly.com/python/
+
+checksums           rmd160  507b151aabe8b525c379c063b7ed0c09bbda98f2 \
+                    sha256  89e57d003a116303a34de6700862391367dd564222ab71f8531df70279fc0193 \
+                    size    8553751
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+        port:py${python.version}-setuptools
+    
+    depends_lib-append \
+        port:py${python.version}-matplotlib \
+        port:py${python.version}-jupyterlab \
+        port:py${python.version}-tenacity
+
+    # skip dependency check in version 5.19.0 that limits jupyterlab~=3.0;
+    # evaluate removing in future versions of plotly
+    build.args-append --skip-dependency-check
+    
+    livecheck.type  none
+}

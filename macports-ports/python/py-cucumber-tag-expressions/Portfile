@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-cucumber-tag-expressions
+version             4.1.0
+revision            0
+
+categories-append   devel
+supported_archs     noarch
+platforms           {darwin any}
+license             MIT
+maintainers         nomaintainer
+
+description         Tag Expression Parser for Python
+long_description    Cucumber can be used to implement automated tests based \
+                    on scenarios described in your Gherkin feature files.
+
+homepage            https://github.com/cucumber/tag-expressions-python
+
+checksums           rmd160  11e9b985817b1cee3ccb6b7c3a5bb2ce7d1f879e \
+                    sha256  e314d5fed6eebb2f90380271f562248fb15e18636764faf40f4dde4b28b1f960 \
+                    size    33630
+
+python.versions     38 39
+
+if {${name} ne ${subport}} {
+    depends_test-append \
+                    port:py${python.version}-pytest-html
+
+    test.run        yes
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} README.rst LICENSE \
+            ${destroot}${docdir}
+    }
+}

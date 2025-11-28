@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-oauthlib
+version             3.2.2
+revision            0
+
+categories-append   net security
+platforms           {darwin any}
+supported_archs     noarch
+license             BSD
+maintainers         {petr @petrrr} openmaintainer
+
+description         A generic, spec-compliant, thorough implementation of the \
+                    OAuth request-signing logic.
+long_description    {*}${description}
+
+homepage            https://github.com/oauthlib/oauthlib
+master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
+distname            ${python.rootname}-${version}
+
+checksums           rmd160  3ee553a54b366680ba7d1efb553f7b289720ae11 \
+                    sha256  9859c40929662bec5d64f34d01c99e093149682a3f38915dc0655d5a633dd918 \
+                    size    177352
+
+python.versions     27 38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_build-append    port:py${python.version}-setuptools
+
+    depends_lib-append      port:py${python.version}-blinker \
+                            port:py${python.version}-cryptography \
+                            port:py${python.version}-jwt
+
+    depends_test-append \
+                    port:py${python.version}-mock
+
+    test.run        yes
+
+    livecheck.type  none
+}

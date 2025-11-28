@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       github 1.0
+
+set real_name   antlr
+github.setup    antlr antlr3 3.5.3
+revision        0
+categories      lang java
+maintainers     nomaintainer
+supported_archs noarch
+platforms       any
+
+description     antlr is ANother Tool for Language Recognition
+long_description    ANTLR, ANother Tool for Language Recognition, is a \
+            language tool that provides a framework for \
+            constructing recognizers, compilers, and translators \
+            from grammatical descriptions containing Java, C#, or \
+            C++ actions.
+
+homepage        https://www.antlr3.org/
+extract.only
+
+checksums       rmd160  542827a5ae23feb0e9eddf481267f72aed8f5294 \
+                sha256  c12109ff119192d3a16360df1a9239cbd03fca6a95ec8044e3b2a0bdc71616f3 \
+                size    6752668
+
+use_configure   no
+
+# Source builds of antlr3 are not possible. So, the default build is a binary
+# install of the jars.
+build {}
+
+destroot {
+    xinstall -m 755 -d ${destroot}${prefix}/share/java/${name}
+    copy ${distpath}/${distname}${extract.suffix} ${destroot}${prefix}/share/java/${real_name}.jar
+}

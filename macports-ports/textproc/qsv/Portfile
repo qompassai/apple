@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cargo   1.0
+PortGroup           github  1.0
+
+github.setup        jqnatividad qsv 0.131.1
+github.tarball_from archive
+revision            0
+
+description         Ultra-fast CSV data-wrangling CLI toolkit
+
+long_description    \
+    qsv is a command line program for indexing, slicing, analyzing, \
+    splitting, enriching, validating & joining CSV files.  Commands are \
+    simple, fast and composable.
+
+categories          textproc
+installs_libs       no
+license             public-domain
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  073467555280a59cf6dc4d48dca093aff1b4ecc5 \
+                    sha256  9038f09a0e1523bcf3a993bd95a36f8dd1c640e7ffbbe9404e018d41a7d82b66 \
+                    size    10738724
+
+build.args-append   --features=feature_capable --bin ${name}
+cargo.offline_cmd
+
+destroot {
+    xinstall -m 0755 \
+        ${worksrcpath}/target/[cargo.rust_platform]/release/${name} \
+        ${destroot}${prefix}/bin/
+}

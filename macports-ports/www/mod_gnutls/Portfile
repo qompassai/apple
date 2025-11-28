@@ -1,0 +1,76 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           compiler_blacklist_versions 1.0
+PortGroup           github 1.0
+
+github.setup        airtower-luna mod_gnutls 0.12.2 mod_gnutls/
+revision            0
+categories          www security crypto
+license             Apache-2
+maintainers         {mps @Schamschula} openmaintainer
+
+description         \
+    mod_gnutls is an extension for Apache's httpd uses the GnuTLS library to \
+    provide HTTPS.
+
+long_description    \
+    mod_gnutls uses the GnuTLS library to provide SSL 3.0, TLS 1.0 and TLS 1.1 \
+    encryption for Apache HTTPD. It is similar to mod_ssl in purpose, but does \
+    not use OpenSSL.
+
+homepage            https://github.com/airtower-luna/mod_gnutls/
+
+checksums           rmd160  2d386566e3457c23bd07a52aa3e1afbf34297ccf \
+                    sha256  bf7008fe6a37b99011de6c2406d9e7a394fb0df252a9bbc0d96d0dd8f6d14d44 \
+                    size    188791
+
+set python.version  312
+
+configure.python    ${prefix}/bin/python3.12
+
+depends_build       port:pkgconfig \
+                    port:python${python.version} \
+                    port:py${python.version}-yaml
+
+depends_lib         port:apache2 \
+                    path:lib/pkgconfig/gnutls.pc:gnutls
+
+use_autoreconf      yes
+
+patchfiles          patch-src-gnutls_sni.c.diff
+
+set apxs            ${prefix}/bin/apxs
+set httpd_conf      ${prefix}/etc/apache2/httpd.conf
+set mdir            ${destroot}${prefix}/lib/apache2/modules/
+
+configure.args      --disable-silent-rules \
+                    --with-apxs=${apxs} \
+                    --disable-strict
+
+compiler.blacklist-append {clang < 800}
+
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+pre-destroot {
+    xinstall -m 755 -d ${mdir}
+}
+
+post-destroot {
+    xinstall -m 755 -d ${destroot}${prefix}/share/doc/${name}
+    xinstall -m 644 -W ${worksrcpath} LICENSE NOTICE README.md \
+        ${destroot}${prefix}/share/doc/${name}
+}
+
+variant memcache description {Distributed SSL Session Cache support} {
+    depends_lib-append      port:apr_memcache
+    configure.args-append   --with-apr-memcache-prefix=${prefix}
+}
+
+notes "
+To enable ${name}, add
+    LoadModule gnutls_module modules/mod_gnutls.so
+to your ${httpd_conf} file.
+"
+
+github.livecheck.regex  {(\d\.\d+(\.\d+))}

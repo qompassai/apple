@@ -1,0 +1,253 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+github.setup        certbot certbot 2.11.0 v
+revision            0
+categories          security
+license             Apache-2
+maintainers         {mps @Schamschula} openmaintainer
+description         An ACME Let's Encrypt client that can obtain certs and extensibly \
+                    update server configurations.
+long_description    {*}${description}
+homepage            https://certbot.eff.org/
+
+supported_archs     noarch
+platforms           {darwin any}
+
+checksums           rmd160  22bce035c71b990daf6eb98362fd1f2ed0611f96 \
+                    sha256  c0e0f4503cf532293a8301ff830c8bc9e29612345e9f9f269a3768ed44969050 \
+                    size    2321976
+
+variant python38 conflicts python39 python310 python311 python312 description {Use Python 3.8} {}
+variant python39 conflicts python38 python310 python311 python312 description {Use Python 3.9} {}
+variant python310 conflicts python38 python39 python311 python312 description {Use Python 3.10} {}
+variant python311 conflicts python38 python39 python310 python312 description {Use Python 3.11} {}
+variant python312 conflicts python38 python39 python310 python311 description {Use Python 3.12} {}
+
+if {![variant_isset python38] && ![variant_isset python39] \
+        && ![variant_isset python310] && ![variant_isset python311] } {
+    default_variants +python312
+}
+
+foreach pv {312 311 310 39 38} {
+    if {[variant_isset python${pv}]} {
+        python.default_version ${pv}
+        break
+    }
+}
+
+depends_build       port:py${python.version}-setuptools
+
+depends_lib-append  port:py${python.version}-acme \
+                    port:py${python.version}-configargparse \
+                    port:py${python.version}-configobj \
+                    port:py${python.version}-cryptography \
+                    port:py${python.version}-distro \
+                    port:py${python.version}-openssl \
+                    port:py${python.version}-parsedatetime \
+                    port:py${python.version}-pyrfc3339 \
+                    port:py${python.version}-tz
+
+build.dir           ${worksrcpath}/${name}
+
+post-patch {
+    reinplace "s|/etc/|${prefix}/etc/|" ${worksrcpath}/certbot/certbot/compat/misc.py
+    reinplace "s|/var/lib/|${prefix}/var/db/|" ${worksrcpath}/certbot/certbot/compat/misc.py
+    reinplace "s|/var/log/|${prefix}/var/log/|" ${worksrcpath}/certbot/certbot/compat/misc.py
+}
+
+subport ${name} {
+    variant docs description {Build man pages} {
+        depends_lib-append \
+            port:py${python.version}-repoze.sphinx.autointerface \
+            port:py${python.version}-sphinx \
+            port:py${python.version}-sphinx_rtd_theme
+
+        post-build {
+            set env(doc_path) ${worksrcpath}/${name}/docs
+            set env(python_branch) ${python.branch}
+            exec sh -c {cd $doc_path && sphinx-build-$python_branch -N -b man . _build/man} >@stdout
+        }
+
+        post-destroot {
+            xinstall -d ${destroot}${prefix}/share/man/man1
+            xinstall -d ${destroot}${prefix}/share/man/man7
+            xinstall -m 640 ${worksrcpath}//${name}/docs/_build/man/certbot.1 \
+                ${destroot}${prefix}/share/man/man1/
+            xinstall -m 640 ${worksrcpath}//${name}/docs/_build/man/certbot.7 \
+                ${destroot}${prefix}/share/man/man7/
+        }
+    }
+}
+
+#
+# integration with local webservers
+# for use with "http-01 challenge"
+#
+
+subport ${name}-apache {
+    description         The certbot Apache plugin for http-01 challenges
+    long_description    The Apache plugin currently supports modern OSes based on Debian, \
+                        Fedora, SUSE, Gentoo and Darwin. This automates both obtaining \
+                        and installing certificates on an Apache webserver. To specify \
+                        this plugin on the command line, simply include \"--apache\". \
+                        https://certbot.eff.org/docs/using.html\#apache
+    build.dir           ${worksrcpath}/${name}-apache
+
+    depends_lib-append  port:mod_perl2 \
+                        port:py${python.version}-python-augeas
+}
+
+subport ${name}-nginx {
+    description         The certbot Nginx plugin for http-01 challenges
+    long_description    The Nginx plugin should work for most configurations. We \
+                        recommend backing up Nginx configurations before using it (though \
+                        you can also revert changes to configurations with \
+                        \"certbot --nginx rollback\"). You can use it by providing the \
+                        \"--nginx\" flag on the commandline. \
+                        https://certbot.eff.org/docs/using.html\#nginx
+    build.dir           ${worksrcpath}/${name}-nginx
+
+    depends_lib-append  port:py${python.version}-parsing
+
+    patchfiles          patch-certbot-nginx-certbot_nginx-constants.py.diff
+
+    post-patch {
+        reinplace "s|%PREFIX%|${prefix}|" \
+        ${worksrcpath}/certbot-nginx/certbot_nginx/_internal/constants.py
+    }
+}
+
+#
+# integration with dns-servers
+# for use with "dns-01 challenge"
+#
+
+subport ${name}-dns-cloudflare {
+    description         The certbot dns_cloudflare plugin for dns-01 challenges
+    long_description    The dns_cloudflare plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the Cloudflare API. \
+                        https://certbot-dns-cloudflare.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-cloudflare
+    depends_lib-append  port:py${python.version}-cloudflare
+}
+
+subport ${name}-dns-digitalocean {
+    description         The certbot dns_digitalocean plugin for dns-01 challenges
+    long_description    The dns_digitalocean plugin automates the process of completing \
+                        a dns-01 challenge (DNS01) by creating, and subsequently \
+                        removing, TXT records using the DigitalOcean API. \
+                        https://certbot-dns-digitalocean.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-digitalocean
+}
+
+subport ${name}-dns-dnsimple {
+    description         The certbot dns_dnsimple plugin for dns-01 challenges
+    long_description    The dns_dnsimple plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the DNSimple API. \
+                        https://certbot-dns-dnsimple.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-dnsimple
+    depends_lib-append  port:py${python.version}-dns-lexicon
+}
+
+subport ${name}-dns-dnsmadeeasy {
+    description         The certbotdns_dnsmadeeasy  plugin for dns-01 challenges
+    long_description    The dns_dnsmadeeasy plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the DNS Made Easy API. \
+                        https://certbot-dns-dnsmadeeasy.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-dnsmadeeasy
+    depends_lib-append  port:py${python.version}-dns-lexicon
+}
+
+subport ${name}-dns-gehirn {
+    description         The certbot gehirn plugin for dns-01 challenges
+    long_description    The dns_gehirn plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the Gehirn Infrastracture Service DNS API. \
+                        https://certbot-dns-gehirn.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-gehirn
+    depends_lib-append  port:py${python.version}-dns-lexicon
+}
+
+subport ${name}-dns-google {
+    description         The certbot google plugin for dns-01 challenges
+    long_description    The dns_google plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the Google Cloud DNS API. \
+                        https://certbot-dns-google.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-google
+}
+
+subport ${name}-dns-linode {
+    description         The certbot linode plugin for dns-01 challenges
+    long_description    The dns_linode plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the Linode API. \
+                        https://certbot-dns-linode.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-linode
+    depends_lib-append  port:py${python.version}-dns-lexicon
+}
+
+subport ${name}-dns-luadns {
+    description         The certbot luadns plugin for dns-01 challenges
+    long_description    The dns_luadns plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the LuaDNS API. \
+                        https://certbot-dns-luadns.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-luadns
+}
+
+subport ${name}-dns-nsone {
+    description         The certbot nsone plugin for dns-01 challenges
+    long_description    The dns_nsone plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the NS1 API. \
+                        https://certbot-dns-nsone.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-nsone
+    depends_lib-append  port:py${python.version}-dns-lexicon
+}
+
+subport ${name}-dns-ovh {
+    description         The certbot ovh plugin for dns-01 challenges
+    long_description    The dns_ovh plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the OVH API. \
+                        https://certbot-dns-ovh.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-ovh
+    depends_lib-append  port:py${python.version}-dns-lexicon
+}
+
+subport ${name}-dns-rfc2136 {
+    description         The certbot rfc2136 plugin for dns-01 challenges
+    long_description    The dns_rfc2136 plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using RFC 2136 Dynamic Updates. \
+                        https://certbot-dns-rfc2136.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-rfc2136
+}
+
+subport ${name}-dns-route53 {
+    description         The certbot route53 plugin for dns-01 challenges
+    long_description    The dns_route53 plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the Amazon Web Services Route 53 API. \
+                        https://certbot-dns-route53.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-route53
+    depends_lib-append  port:py${python.version}-boto3
+}
+
+subport ${name}-dns-sakuracloud {
+    description         The certbot sakuracloud plugin for dns-01 challenges
+    long_description    The dns_sakuracloud plugin automates the process of completing a \
+                        dns-01 challenge (DNS01) by creating, and subsequently removing, \
+                        TXT records using the Sakura Cloud DNS API. \
+                        https://certbot-dns-sakuracloud.readthedocs.io/
+    build.dir           ${worksrcpath}/${name}-dns-sakuracloud
+    depends_lib-append  port:py${python.version}-dns-lexicon
+}

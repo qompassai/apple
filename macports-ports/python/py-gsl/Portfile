@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               python 1.0
+
+name                    py-gsl
+python.rootname         pygsl
+version                 2.3.3
+revision                0
+
+categories-append       science
+license                 GPL-2+
+maintainers             nomaintainer
+
+description             Python interface to the GNU Scientific Library
+long_description        Python interface to the GSL, the GNU Scientfic \
+                        Library. Variants for the use of different \
+                        array-objects supported by pygsl are provided.
+
+homepage                https://github.com/pygsl/pygsl
+
+checksums               rmd160  ebf16a8dc8af94689c6789f0691ad6825c8c320a \
+                        sha256  1779bce41b3cb0e370d11bf41003852ba4750c51df5b8771bb34265e8e0f1df3 \
+                        size    1087169
+
+python.versions         38 39 310 311
+
+if {${name} ne ${subport}} {
+    depends_lib-append  port:gsl \
+                        port:py${python.version}-numpy
+}

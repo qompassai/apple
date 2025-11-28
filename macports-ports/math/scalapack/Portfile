@@ -1,0 +1,62 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           mpi 1.0
+PortGroup           linear_algebra 1.0
+PortGroup           muniversal 1.0
+PortGroup           compiler_blacklist_versions 1.0
+
+name                scalapack
+version             2.2.0
+revision            2
+categories          math
+platforms           darwin
+maintainers         {@catap korins.ky:kirill} openmaintainer
+license             BSD
+description         A package for solving linear equations
+long_description    The ScaLAPACK (or Scalable LAPACK) library includes \
+                    a subset of LAPACK routines redesigned for distributed \
+                    memory MIMD parallel computers. Since version 2.0.0, \
+                    ScaLAPACK includes BLACS.
+
+homepage            http://www.netlib.org/scalapack/
+master_sites        ${homepage}
+extract.suffix      .tgz
+
+checksums           rmd160  542ed6e3cd838151dff09b2016eca8185a68782d \
+                    sha256  40b9406c20735a9a3009d863318cb8d3e496fb073d201c5463df810e01ab2a57 \
+                    size    4769286
+
+mpi.setup           require require_fortran
+
+compiler.blacklist-append   {clang < 500}
+
+# remove when issue https://trac.macports.org/ticket/62567 is closed
+configure.cflags-append -Wno-implicit-function-declaration
+configure.args      -DCMAKE_INSTALL_NAME_DIR=${prefix}/lib \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DBUILD_TESTING=ON
+# BUILD_TESTING only affects BLACS directory anyway
+
+test.run            yes
+
+pre-test {
+    # test infrastructure uses /bin/ps (I think for checking on job timeout), which is forbidden by sandboxing
+    append portsandbox_profile " (allow process-exec (literal \"/bin/ps\") (with no-profile))"
+}
+
+pre-configure {
+    configure.args-append \
+        -DMPI_C_COMPILER=${mpi.cc} \
+        -DMPI_Fortran_COMPILER=${mpi.fc} \
+        -DMPIEXEC_EXECUTABLE=${prefix}/bin/${mpi.exec} \
+        -DLAPACK_LIBRARIES="-L${prefix}/lib ${linalglib}"
+}
+
+# see https://github.com/Reference-ScaLAPACK/scalapack/issues/21
+compilers.allow_arguments_mismatch \
+                    yes
+
+livecheck.type      regex
+livecheck.regex     ${name}-(\[0-9.\]+)${extract.suffix}

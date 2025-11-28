@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+PortGroup           github 1.0
+
+github.setup        rocky python-filecache 2.3.1
+revision            0
+name                py-pyficache
+
+platforms           {darwin any}
+supported_archs     noarch
+license             GPL-3+
+maintainers         {reneeotten @reneeotten} openmaintainer
+
+description         A Python module for reading and caching lines
+long_description    The pyficache module allows one to get any line from \
+                    any file, caching lines of the file on first access \
+                    to the file. Although the file may be any file, the \
+                    common use is when the file is a Python script.
+
+checksums           rmd160  ca94e3c9f753aaa44cfdc8b30cee0ce5a056ba2d \
+                    sha256  f2554210d230fc84c40a4a5976c3fd48e23a9cebe2a5fa9a3734850203c76932 \
+                    size    52131
+
+python.versions     38 39 310
+
+github.livecheck.regex  (\[0-9\.\]+)
+
+if {${subport} ne ${name}} {
+    depends_lib-append \
+                    port:py${python.version}-pygments \
+                    port:py${python.version}-xdis
+
+    test.run        yes
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} COPYING ChangeLog \
+           NEWS.md README.rst ${destroot}${docdir}
+    }
+}

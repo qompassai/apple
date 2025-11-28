@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-pytest-qt
+version             4.4.0
+revision            0
+
+categories-append   devel
+platforms           {darwin any}
+supported_archs     noarch
+license             MIT
+maintainers         {reneeotten @reneeotten} openmaintainer
+
+description         pytest plugin for Qt (PyQt5/PyQt6 and PySide2/PySide6) application testing
+long_description    {*}${description}
+
+homepage            https://github.com/pytest-dev/pytest-qt
+
+checksums           rmd160  4a021a07aea11413341cbbdf7777f7f69fdaecc7 \
+                    sha256  76896142a940a4285339008d6928a36d4be74afec7e634577e842c9cc5c56844 \
+                    size    125443
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-setuptools_scm
+
+    depends_lib-append \
+                    port:py${python.version}-pytest
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} LICENSE CHANGELOG.rst \
+            README.rst ${destroot}${docdir}
+    }
+}

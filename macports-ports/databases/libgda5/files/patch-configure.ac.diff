@@ -1,0 +1,19 @@
+--- configure.ac.orig	2020-11-08 12:23:19.000000000 -0800
++++ configure.ac	2022-09-21 18:15:07.000000000 -0700
+@@ -381,7 +381,7 @@
+ 	AC_DEFINE(ENABLE_BINRELOC)
+ 	br_cv_binreloc=yes
+     fi
+-    PKG_CHECK_MODULES(MAC_INTEGRATION, ige-mac-integration, have_ige=yes, have_ige=no)
++    PKG_CHECK_MODULES(MAC_INTEGRATION, ige-mac-integration, have_ige=no, have_ige=no)
+     if test x"$have_ige" = "xyes"
+     then
+ 	AC_DEFINE(HAVE_MAC_INTEGRATION)
+@@ -391,6 +391,7 @@
+     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
+     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
+     LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
++    linklibext=.dylib
+     AC_DEFINE(HAVE_CARBON)
+     COREDEPS_LIBS="$COREDEPS_LIBS -framework Carbon"
+   ;;

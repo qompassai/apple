@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           cmake 1.1
+PortGroup           legacysupport 1.0
+
+# getline
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        MisterTea EternalTerminal 6.2.8 et-v
+revision            0
+name                et
+categories          net
+license             Apache-2
+platforms           darwin
+maintainers         {l2dy @l2dy} openmaintainer
+description         a remote shell that automatically reconnects without interrupting the session
+long_description    Eternal Terminal (ET) is ${description}.
+
+checksums           rmd160  61490643b34f5950cc0bfa336a8fcbbc9f2b718e \
+                    sha256  39e93f1d935fed020d50430dd6f2cdb598dcc61f39ab7de1cbffdcf81651b86c \
+                    size    23384531
+
+depends_lib         port:libsodium \
+                    port:protobuf3-cpp \
+                    path:lib/libssl.dylib:openssl \
+                    port:zlib
+
+compiler.cxx_standard \
+                    2017
+
+patchfiles          patch-src-base-Headers.hpp.diff
+
+configure.args      -DDISABLE_VCPKG:BOOL=ON \
+                    -DDISABLE_SENTRY:BOOL=ON \
+                    -DBUILD_TESTING:BOOL=OFF
+
+if {${os.platform} eq "darwin" && ${os.major} < 19} {
+    depends_lib-append port:boost
+}

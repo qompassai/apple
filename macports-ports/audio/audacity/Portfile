@@ -1,0 +1,102 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; truncate-lines: t; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+name                audacity
+version             3.6.1
+categories          audio
+license             GPL-3
+maintainers         {makr @mohd-akram} openmaintainer
+
+set audacity_dir    ${applications_dir}/Audacity.app/Contents
+
+subport ${name} {
+    PortGroup           cmake 1.1
+    PortGroup           wxWidgets 1.0
+
+    github.setup        audacity audacity ${version} Audacity-
+    github.tarball_from releases
+    revision            0
+    conflicts           audacity-legacy
+    description         multi-track audio editor
+
+    long_description    Audacity is an easy-to-use, multi-track audio editor and \
+                        recorder for Windows, macOS, GNU/Linux and other operating \
+                        systems.
+
+    homepage            https://www.audacityteam.org
+
+    checksums           rmd160  8a5be894949954773d8c087836470da89e54b9fb \
+                        sha256  f7b7be947d93c6c84a387b47dc875ac3fa51596da024758f2093d0d26b4d7410 \
+                        size    61517248
+
+    distname            ${name}-sources-${version}
+
+    wxWidgets.use       wxWidgets-3.2
+
+    depends_lib-append  port:${wxWidgets.port} \
+                        port:lame \
+                        port:libvorbis \
+                        port:flac \
+                        port:opusfile \
+                        port:libsndfile \
+                        port:portaudio \
+                        port:rapidjson \
+                        port:libid3tag \
+                        port:portmidi \
+                        port:wavpack
+
+    depends_run         port:ffmpeg7
+
+    patchfiles          patch-offline-manual.diff
+
+    post-patch {
+        # truncate/disable this script which changes library paths
+        close [open ${worksrcpath}/scripts/build/macOS/fix_bundle.py w]
+    }
+
+    configure.args      -Daudacity_conan_enabled=OFF \
+                        -Daudacity_has_vst3=OFF \
+                        -DwxWidgets_CONFIG_EXECUTABLE=${wxWidgets.wxconfig}
+
+    compiler.cxx_standard   2017
+
+    # if not present some menu items appear in another language
+    destroot.keepdirs   ${destroot}${audacity_dir}/Resources/en.lproj
+
+    post-destroot {
+        platform darwin {
+            move ${destroot}${prefix}/Audacity.app ${destroot}${applications_dir}/
+        }
+    }
+}
+
+subport ${name}-manual {
+    revision            0
+    description         The manual for audacity
+    long_description    {*}${description}
+    github.setup        audacity audacity-manual ${version} v
+    github.tarball_from releases
+    homepage            https://manual.audacityteam.org
+    checksums           rmd160  038e8c63456f98eacad51c70c84a45b56a2d69c0 \
+                        sha256  a099f22885a0260f0b4a1ed8f0049583da6d26c1f5d6d7aaeeb1fe50d3a0fa08 \
+                        size    26053438
+    depends_run         port:audacity
+    use_configure       no
+    build               {}
+    installs_libs       no
+    supported_archs     noarch
+    platforms           {darwin any}
+    worksrcdir          help
+
+    set data_dir        ${prefix}/share/audacity
+    platform darwin {
+        set data_dir    ${audacity_dir}
+    }
+
+    destroot {
+        xinstall -d ${destroot}${data_dir}
+        copy ${worksrcpath} ${destroot}${data_dir}
+    }
+}

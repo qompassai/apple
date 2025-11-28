@@ -1,0 +1,156 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                chromedriver
+version             114.0.5735.90
+categories          www
+platforms           darwin
+maintainers         {@catap korins.ky:kirill} openmaintainer
+license             Apache-2
+supported_archs     arm64 x86_64
+
+description         ChromeDriver - WebDriver for Chrome
+
+long_description    WebDriver is an open source tool for automated testing of \
+                    webapps across many browsers. It provides capabilities for \
+                    navigating to web pages, user input, JavaScript execution, \
+                    and more.
+
+homepage            https://chromedriver.chromium.org/
+master_sites        https://chromedriver.storage.googleapis.com/${version}/
+
+dist_subdir         ${subport}/${version}
+
+platform arm {
+    distname        ${name}_mac_arm64
+}
+platform i386 {
+    distname        ${name}_mac64
+}
+
+if {${os.arch} ni [list arm i386]} {
+    known_fail      yes
+    pre-fetch {
+        ui_error "chromedriver is only available on \
+            [join ${supported_archs} " or "] architectures."
+        error {unsupported platform}
+    }
+}
+
+# See: https://trac.macports.org/ticket/67097
+if {${os.platform} eq "darwin" && ${os.major} < 20} {
+    known_fail      yes
+    pre-fetch {
+        ui_error "${name} @${version} requires macOS 11 or later."
+        return -code error "incompatible macOS version"
+    }
+}
+
+use_zip             yes
+
+# set build_arch by hand on arm64/x86_64 systems to get x86_64/arm64 checksums
+# sudo port -v checksum chromedriver os.arch=arm build_arch=arm64
+# run `port clean --all chromedriver` afterwards
+
+if {${configure.build_arch} eq {arm64}} {
+    distfiles       ${name}_mac_arm64${extract.suffix}
+
+    checksums       rmd160  5d6b807e173654241b0175cfb257ea50ad539300 \
+                    sha256  14eb3a1642a829fcbc11ef22e113b2f6a2340c4f4e235e5494b414c4834fa47c \
+                    size    7757508
+} elseif {${configure.build_arch} eq {x86_64}} {
+    distfiles       ${name}_mac64${extract.suffix}
+
+    checksums       rmd160  4181e2c2b87e256a18439c2bda1bad1ea9a731c0 \
+                    sha256  6abdc9d358c2bc4668bef7b23048de2a9dbd3ad82cfbc6dfe322e74d4cff1650 \
+                    size    8693987
+}
+
+# most recent versions via
+# https://sites.google.com/chromium.org/driver/downloads
+
+set major_version   [lindex [split ${version} .] 0]
+
+extract.mkdir       yes
+extract.only        ${distname}
+
+use_configure       no
+
+build {}
+
+destroot {
+    copy \
+        ${worksrcpath}/${name} \
+        ${destroot}${prefix}/bin/${subport}
+}
+
+# use these to specify python versions, python3 required
+# use ${prefix}/var/macports/sources/rsync.macports.org/macports/release/tarballs/ports/_resources/port1.0/group/python-1.0.tcl
+set python_version  310
+set python_branch   [string index ${python_version} 0].[string range ${python_version} 1 end]
+set python_prefix   ${frameworks_dir}/Python.framework/Versions/${python_branch}
+set python_bin      ${python_prefix}/bin/python${python_branch}
+
+variant undetected \
+    description {Undetected chromedriver.} {
+
+    depends_lib-append \
+                    port:python${python_version} \
+                    port:py${python_version}-undetected-chromedriver
+
+    post-patch {
+        copy \
+            ${worksrcpath}/${name} \
+            ${worksrcpath}/${subport}-${major_version}
+
+        # patch the chromedriver binary through undetected_chromedriver.Patcher
+        system -W ${worksrcpath} \
+            "${python_bin} <<PATCH_CHROMEDRIVER_PY
+from undetected_chromedriver import Patcher
+
+patcher = Patcher(executable_path='${worksrcpath}/${name}')
+assert patcher.patch(), \\
+    \"Binary '${worksrcpath}/${name}' is not patched.\"
+PATCH_CHROMEDRIVER_PY
+"
+        if {${configure.build_arch} eq {arm64}} {
+            system "codesign -f -s - ${worksrcpath}/${name}"
+        }
+        move \
+            ${worksrcpath}/${name} \
+            ${worksrcpath}/${subport}-undetected
+        ln -s \
+            ${prefix}/bin/${subport}-undetected \
+            ${worksrcpath}/${name}
+    }
+
+    post-destroot {
+        copy \
+            ${worksrcpath}/${subport}-${major_version} \
+            ${destroot}${prefix}/bin
+        ln -s \
+            ${prefix}/bin/${subport}-${major_version} \
+            ${destroot}${prefix}/bin/${subport}-original
+        copy \
+            ${worksrcpath}/${subport}-undetected \
+            ${destroot}${prefix}/bin
+    }
+
+    notes-append \
+        "The ${subport} binary has been patched to mitigate detection.\
+The original ${name} binary has been moved to ${subport}-original.\
+Use ${subport} with the port
+
+    py${python_version}-undetected-chromedriver
+
+(with your preferred Python version) and the Python code:
+
+    import undetected_chromedriver as uc
+    driver = uc.Chrome(driver_executable_path='${prefix}/bin/${subport}-undetected')
+"
+}
+
+livecheck.type  regex
+livecheck.url   https://chromedriver.storage.googleapis.com/LATEST_RELEASE
+livecheck.regex {^(.*)$}

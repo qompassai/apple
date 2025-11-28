@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       meson 1.0
+
+name            desktop-file-utils
+version         0.27
+revision        0
+maintainers     nomaintainer
+categories      gnome
+license         GPL-2+
+installs_libs   no
+description     Command line utilities for working with desktop entries.
+
+long_description \
+    ${description}
+
+homepage        https://www.freedesktop.org/wiki/Software/desktop-file-utils/
+master_sites    https://www.freedesktop.org/software/desktop-file-utils/releases/
+
+use_xz          yes
+
+checksums       rmd160  1e6fa4f40d9a9319287c1cae6dcf0a3e16ae4e81 \
+                sha256  a0817df39ce385b6621880407c56f1f298168c040c2032cedf88d5b76affe836 \
+                size    80808
+
+depends_build   port:pkgconfig \
+                port:autoconf \
+                port:automake
+
+depends_lib     path:lib/pkgconfig/glib-2.0.pc:glib2
+
+# cc1: error: unrecognized command line option "-std=gnu11"
+compiler.c_standard 2011
+
+post-activate {
+    system "update-desktop-database -q ${prefix}/share/applications; true"
+}
+
+livecheck.type  regex
+livecheck.url   [lindex ${master_sites} 0]
+livecheck.regex "${name}-(\\d+(?:\\.\\d+)*)${extract.suffix}"

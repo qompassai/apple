@@ -1,0 +1,11 @@
+--- Makefile.orig	2024-07-24 01:21:35.000000000 -0500
++++ Makefile	2024-07-24 06:28:30.000000000 -0500
+@@ -64,7 +64,7 @@
+ 
+ ca-bundle: scripts/mk-ca-bundle.pl
+ 	@echo "generate a fresh ca-bundle.crt"
+-	@perl $< -b -l -u lib/ca-bundle.crt
++	@perl $< -n lib/ca-bundle.crt
+ 
+ ca-firefox: lib/firefox-db2pem.sh
+ 	@echo "generate a fresh ca-bundle.crt"

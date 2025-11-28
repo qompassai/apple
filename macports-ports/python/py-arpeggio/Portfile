@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-arpeggio
+python.rootname     Arpeggio
+version             2.0.2
+revision            0
+
+license             MIT
+supported_archs     noarch
+platforms           {darwin any}
+maintainers         nomaintainer
+
+description         Packrat parser interpreter
+long_description    Arpeggio is a recursive descent parser with memoization \
+                    based on PEG grammars (aka Packrat parser).
+
+homepage            https://github.com/igordejanovic/Arpeggio
+
+checksums           rmd160  9384ca40412f52d7efdc28470fdd15c030056a10 \
+                    sha256  c790b2b06e226d2dd468e4fbfb5b7f506cec66416031fde1441cf1de2a0ba700 \
+                    size    766643
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-setuptools
+
+    test.run        yes
+}

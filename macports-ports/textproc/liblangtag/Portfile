@@ -1,0 +1,32 @@
+#-*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               bitbucket 1.0
+
+bitbucket.setup         tagoh liblangtag 0.6.4
+categories              textproc devel
+license                 {LGPL-3+ MPL-2}
+maintainers             {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+
+description             an interface library to access tags for identifying languages
+long_description        liblangtag is ${description}.
+
+use_bzip2               yes
+bitbucket.tarball_from  downloads
+
+checksums               rmd160  9ab882d8ce8667a2fb241ca43c0c125cd0f6dc9e \
+                        sha256  5701062c17d3e73ddaa49956cbfa5d47d2f8221988dec561c0af2118c1c8a564 \
+                        size    764946
+
+patchfiles-append       patch-libtool.diff \
+                        patch-sed.diff
+
+depends_build-append    port:gtk-doc \
+                        port:libtool \
+                        port:pkgconfig
+
+depends_lib-append      path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                        path:lib/pkgconfig/gobject-introspection-1.0.pc:gobject-introspection \
+                        port:libxml2
+
+configure.args-append   --enable-test=no

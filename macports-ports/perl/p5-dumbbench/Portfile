@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           perl5 1.0
+
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         Dumbbench 0.504 ../../authors/id/B/BD/BDFOY
+revision            0
+license             {Artistic-1 GPL}
+maintainers         {devans @dbevans} openmaintainer
+description         Dumbbench - More reliable benchmarking with the least amount of thinking
+long_description    {*}${description}
+
+platforms           {darwin any}
+supported_archs     noarch
+
+checksums           rmd160  fe2ab8e6491ccf42b998d1a0b743471970642bf2 \
+                    sha256  57067480f86f8ec5e9e22cbd78eb10a515edfa73b00997c5e2199d1eb6402130 \
+                    size    34776
+
+if {${perl5.major} != ""} {
+    depends_lib-append \
+                    port:p${perl5.major}-capture-tiny \
+                    port:p${perl5.major}-class-xsaccessor \
+                    port:p${perl5.major}-devel-checkos \
+                    port:p${perl5.major}-params-util \
+                    port:p${perl5.major}-number-witherror \
+                    port:p${perl5.major}-statistics-caseresampling \
+                    port:p${perl5.major}-time-hires
+}

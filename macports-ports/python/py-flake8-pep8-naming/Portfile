@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-flake8-pep8-naming
+python.rootname     pep8-naming
+version             0.13.3
+revision            0
+
+categories-append   devel
+supported_archs     noarch
+platforms           {darwin any}
+license             MIT
+maintainers         {petr @petrrr} openmaintainer
+
+description         Check PEP-8 naming conventions, plugin for flake8
+long_description    {*}${description}.
+
+homepage            https://github.com/PyCQA/pep8-naming
+
+checksums           rmd160  eaf6aae5485acdd959684ed7567ce6c5185e109e \
+                    sha256  1705f046dfcd851378aac3be1cd1551c7c1e5ff363bacad707d43007877fa971 \
+                    size    16129
+
+python.versions     38 39 310
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:py${python.version}-setuptools
+
+    depends_lib-append \
+                    port:py${python.version}-flake8-polyfill
+
+    test.run        yes
+    python.test_framework
+    test.cmd        ${python.bin} run_tests.py
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} README.rst CHANGELOG.rst \
+            LICENSE ${destroot}${docdir}
+    }
+}

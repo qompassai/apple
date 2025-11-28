@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                libstdcxx-docs
+version             14.1.0
+revision            0
+categories          lang
+supported_archs     noarch
+platforms           any
+license             GPL-3+
+maintainers         {makr @mohd-akram} openmaintainer
+
+description         libstdc++ manpages
+
+long_description    Manpages for the C++ library.
+
+homepage            https://gcc.gnu.org/onlinedocs/libstdc++/
+
+depends_build       path:bin/doxygen:doxygen path:bin/dot:graphviz
+
+master_sites        gnu:gcc/gcc-${version}
+distname            gcc-${version}
+set major           [lindex [split ${version} .] 0]
+dist_subdir         gcc${major}
+
+checksums           rmd160  7ef2f86a35529c52a71107ae4e82400ce3c90758 \
+                    sha256  e283c654987afe3de9d8080bc0bd79534b5ca0d681a73a11ff2b5d3767426840 \
+                    size    92265736
+
+use_xz              yes
+
+configure.dir       ${workpath}/build
+configure.cmd       ${worksrcpath}/libstdc++-v3/configure
+
+build.dir           ${configure.dir}
+build.target        man
+
+destroot.dir        ${configure.dir}
+destroot.target     install-man
+
+livecheck.name      gcc

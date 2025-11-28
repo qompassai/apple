@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cargo   1.0
+PortGroup           github  1.0
+
+github.setup        kdheepak taskwarrior-tui 0.26.3 v
+github.tarball_from archive
+revision            0
+
+description         A terminal user interface for taskwarrior
+long_description    {*}${description}
+
+categories          office
+installs_libs       no
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    {judaew @judaew} \
+                    openmaintainer
+
+checksums           rmd160  c4385ca309df7b1150a55368998ddfbdd056e043 \
+                    sha256  76f053e2e3c9e71b8106e3fc3c18fd4400a98c09a8cde5972305e0eeaecc08d3 \
+                    size    79046
+
+build.pre_args      --release -v -j${build.jobs}
+
+depends_build-append \
+                    port:git \
+                    port:go-md2man
+
+depends_run-append  port:task
+
+build.env-append    CARGO_NET_GIT_FETCH_WITH_CLI=true
+
+post-build {
+    system -W ${worksrcpath}/docs "go-md2man -in=${name}.1.md -out=${name}.1"
+}
+
+destroot {
+    xinstall -m 0755 \
+        ${worksrcpath}/target/[cargo.rust_platform]/release/${name} \
+        ${destroot}${prefix}/bin/
+
+    xinstall -m 0644 ${worksrcpath}/docs/${name}.1 \
+        ${destroot}${prefix}/share/man/man1
+}

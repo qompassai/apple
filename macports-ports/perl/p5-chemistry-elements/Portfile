@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           perl5 1.0
+
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         Chemistry-Elements 1.077 ../../authors/id/B/BD/BDFOY
+revision            0
+epoch               1
+license             Artistic-2
+maintainers         nomaintainer
+
+platforms           {darwin any}
+supported_archs     noarch
+
+description         Perl extension for working with Chemical Elements
+long_description    {*}${description}
+
+checksums           rmd160  95f18c4387643a3c9f60749026943f6b41b0d991 \
+                    sha256  08ad7001560e00f8f678068c79657a79c8a8e9d8e0303baaa2ad58c60d2d2aab \
+                    size    23858
