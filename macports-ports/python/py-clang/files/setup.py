@@ -11,7 +11,7 @@ setup(
     long_description=open("README.txt").read(),
     url="http://clang.llvm.org/",
     download_url="http://llvm.org/releases/download.html",
-    license="License :: OSI Approved :: University of Illinois/NCSA Open Source License",
+    license="Apache-2.0",
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: University of Illinois/NCSA Open Source License",
